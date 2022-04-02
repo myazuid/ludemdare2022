@@ -23,7 +23,10 @@ public class GateController : MonoBehaviour
 
     private void OnMouseDown()
     {
-        ProcessOutboundTraveller(); 
+        if (outboundTravellerQueue.Count > 0)
+        {
+            ProcessOutboundTraveller();
+        }
     }
 
     private void OnMouseEnter()
@@ -56,6 +59,20 @@ public class GateController : MonoBehaviour
             traveller.transform.position =
                 new Vector2(traveller.transform.position.x - 0.1f,
                 traveller.transform.position.y);
+        }
+    }
+
+    public void RemoveTravellerFromQueueAndShiftDownQueue(GameObject _traveller)
+    {
+        var index = outboundTravellerQueue.IndexOf(_traveller);
+
+        outboundTravellerQueue.Remove(_traveller);
+
+        for (int i = index; i < outboundTravellerQueue.Count; i++)
+        {
+            outboundTravellerQueue[i].transform.position =
+                new Vector2(outboundTravellerQueue[i].transform.position.x -
+                0.1f, outboundTravellerQueue[i].transform.position.y);
         }
     }
 }
