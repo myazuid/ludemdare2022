@@ -5,15 +5,22 @@ using UnityEngine;
 public class TravellerController : MonoBehaviour
 {
     [SerializeField] private GameObject startGate, endGate;
-    float timeSpentQueuing;
-    float queuingPatienceDuration = 30;
+
+    // MOVEMENT
     [SerializeField] float travellerSpeed;
     [SerializeField] float thresholdDistanceToEnterQueue;
     private float frequencyToCheckProximityToEndGate = 1;
     private float nextTimeToCheckProximityToEndGate = 0;
 
-    public enum UnhappinessLevelType { Happy,Unsatisfied,Angry,Leaving };
+    public enum TravellerState { Travelling, Queuing };
+    private TravellerState travellerState = TravellerState.Travelling;
 
+    // QUEUING STUFF
+    float timeSpentQueuing;
+    float queuingPatienceDuration = 30;
+    private float queueDistanceFromNextTraveller = 0.1f;
+
+    public enum UnhappinessLevelType { Happy, Unsatisfied, Angry, Leaving };
     private UnhappinessLevelType UnhappinessLevel
     {
         get
@@ -38,17 +45,6 @@ public class TravellerController : MonoBehaviour
                 return UnhappinessLevelType.Leaving;
             }
         }
-    }
-
-    public enum TravellerState { Travelling, Queuing};
-    private TravellerState travellerState = TravellerState.Travelling;
-
-    private float queueDistanceFromNextTraveller = 0.1f;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
     }
 
     // Update is called once per frame
@@ -79,8 +75,6 @@ public class TravellerController : MonoBehaviour
             var dist = Vector2.Distance(transform.position,
             _endGate.transform.position);
 
-            print("Distance to my end gate is " + dist);
-
             if (dist < thresholdDistanceToEnterQueue)
             {
                 EnterQueue(_endGate);
@@ -93,8 +87,6 @@ public class TravellerController : MonoBehaviour
 
     private void EnterQueue(GameObject _endGate)
     {
-        print("Entering the queue of " + _endGate.name);
-
         travellerState = TravellerState.Queuing;
 
         var gateController = endGate.GetComponent<GateController>();
