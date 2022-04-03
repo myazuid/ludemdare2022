@@ -88,7 +88,7 @@ public class GameController : MonoBehaviour
 
     private void UpdateSpawnRate()
     {
-        _travellerSpawnRateInSeconds -= 0.01f;
+        _travellerSpawnRateInSeconds -= 0.05f;
         _travellerSpawnRateInSeconds = Mathf.Round(_travellerSpawnRateInSeconds * 100f) / 100f;
     }
 
