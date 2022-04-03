@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class PathManager : MonoBehaviour
     [SerializeField] List<float> pathLevelSpeedMultiplier = new List<float>();
 
     Transform gatesParent;
+
+    public static Action OnPathUpgraded;
 
     private void Awake()
     {
@@ -96,5 +99,6 @@ public class Path
     public void UpgradePath()
     {
         // to upgrade pathLevel
+        PathManager.OnPathUpgraded?.Invoke();
     }
 }

@@ -41,7 +41,7 @@ public class TestingTravellerSpawning : MonoBehaviour
             Quaternion.identity);
 
         traveller.GetComponent<TravellerController>().startGate =
-            gatesParent.GetChild(startGate).gameObject;
+            gatesParent.GetChild(startGate).gameObject; 
         traveller.GetComponent<TravellerController>().endGate =
             gatesParent.GetChild(endGate).gameObject;
     }

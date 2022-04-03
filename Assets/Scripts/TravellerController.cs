@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TravellerController : MonoBehaviour
 {
@@ -34,6 +36,16 @@ public class TravellerController : MonoBehaviour
         destination = endGate.transform.Find("DestinationPoint").position;
 
         endGateController = endGate.GetComponent<GateController>();
+    }
+
+    private void OnEnable()
+    {
+        //PathManager.OnPathUpgraded += **REPLACE_ME_WITH_PATH_HANDLER_SPEED_CHANGE_LOGIC**;
+    }
+
+    private void OnDisable()
+    {
+        //PathManager.OnPathUpgraded -= **REPLACE_ME_WITH_PATH_HANDLER_SPEED_CHANGE_LOGIC**;
     }
 
     // Update is called once per frame
@@ -158,7 +170,8 @@ public class TravellerController : MonoBehaviour
     {
         print(this.gameObject.name + "says - Fuck this, I'm leaving!");
 
-        // tell game controller
+        //fire event to GameController to handle payments/remove traveller from global list
+        GateController.OnTravellerProcessed?.Invoke(gameObject, false);
 
         var gateController = endGate.GetComponent<GateController>();
         gateController.RemoveTravellerFromQueueAndShiftDownQueue(this.gameObject);
