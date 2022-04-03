@@ -71,6 +71,11 @@ public class GateController : MonoBehaviour
 
     private void ProcessOutboundTraveller()
     {
+        if (outboundTravellerQueue.Count == 0)
+        {
+            return;
+        }
+        
         var processedTraveller = outboundTravellerQueue[0];
 
         outboundTravellerQueue.RemoveAt(0);

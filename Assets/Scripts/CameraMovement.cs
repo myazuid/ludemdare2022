@@ -30,7 +30,7 @@ public class CameraMovement : MonoBehaviour
         // Zooming
         var scroll = Input.mouseScrollDelta.y;
         var currentSize = virtualCam.m_Lens.OrthographicSize;
-        var clampedSize = Mathf.Clamp(currentSize + scroll * zoomScrollSpeed, maxZoom, minZoom);
+        var clampedSize = Mathf.Clamp(currentSize - scroll * zoomScrollSpeed, maxZoom, minZoom);
         virtualCam.m_Lens.OrthographicSize = clampedSize;
     }
 }

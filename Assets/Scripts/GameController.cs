@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
@@ -27,16 +28,18 @@ public class GameController : MonoBehaviour
     private float _timeSinceLastSpawn;
     private float _approvalRating;
     private float _approvalRatingChangeSmall, _approvalRatingChangeBig;
-    private int _currentBalance;
+    [NonSerialized]
+    public int _currentBalance;
+
+    public int _totalProcessed;
     
     
     private List<GameObject> _travellers;
-    
-    //temp UI stuff
-    [Header("TEMP UI STUFF")]
-    [SerializeField] private TextMeshProUGUI _currentBalanceText;
-    [SerializeField] private TextMeshProUGUI _currentApprovalRatingText;
 
+    public static Action<int> onBalanceChanged;
+    public static Action<float> onApprovalChanged;
+    public static Action<int> onTotalProcessedChanged;
+    
     private void Awake()
     {
         if (instance == null)
@@ -69,10 +72,6 @@ public class GameController : MonoBehaviour
         _increaseDifficultyFrequencyInSeconds = 30f;
 
         InvokeRepeating(nameof(UpdateSpawnRate), _increaseDifficultyFrequencyInSeconds, _increaseDifficultyFrequencyInSeconds);
-        
-        //temp UI stuff
-        _currentBalanceText.text = "$" + _currentBalance;
-        _currentApprovalRatingText.text = "Approval Rating: " + _approvalRating;
     }
 
     private void Update()
@@ -114,7 +113,7 @@ public class GameController : MonoBehaviour
     public void AddToBalance()
     {
         _currentBalance += fareCost;
-        UpdateUI();
+        onBalanceChanged.Invoke(_currentBalance);
     }
 
     public bool SpendFromBalance(int purchaseCost)
@@ -122,21 +121,14 @@ public class GameController : MonoBehaviour
         if (_currentBalance - purchaseCost > 0)
         {
             _currentBalance -= purchaseCost;
-            UpdateUI();
+            onBalanceChanged.Invoke(purchaseCost);
+
             return true;
         }
         else
         {
             return false;
         }
-    }
-    
-    private void UpdateUI()
-    {
-        //Temp UI stuff
-        _currentBalanceText.text = "$" + _currentBalance;
-        _currentApprovalRatingText.text = "Approval Rating: " + _approvalRating;
-        
     }
 
     private void FinishTravellerProcessing(GameObject travellerObject, bool transitedSuccessfully)
@@ -146,6 +138,8 @@ public class GameController : MonoBehaviour
         {
             AddToBalance();
             RaiseApprovalRating(false);
+            _totalProcessed++;
+            onTotalProcessedChanged.Invoke(_totalProcessed);
         }
         else LowerApprovalRating(false);
     }
@@ -165,7 +159,7 @@ public class GameController : MonoBehaviour
         }
         
         _approvalRating = Mathf.Round(_approvalRating * 10f) / 10f;
-        UpdateUI();
+        onApprovalChanged.Invoke(_approvalRating);
     }
 
     private void LowerApprovalRating(bool bigApprovalRatingLoss)
@@ -177,7 +171,7 @@ public class GameController : MonoBehaviour
         else _approvalRating -= _approvalRatingChangeSmall;
         
         _approvalRating = Mathf.Round(_approvalRating * 10f) / 10f;
-        UpdateUI();
+        onApprovalChanged.Invoke(_approvalRating);
         
         if (_approvalRating <= 0f)
         {

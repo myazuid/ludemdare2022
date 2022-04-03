@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Playtesting (2113UK).unity
     guid: 2f81dd62013e1470fa23f1dcf0da955c
+  - enabled: 1
+    path: Assets/Scenes/PrototypeNick - SpriteShapeTest 1.unity
+    guid: 47f6baf3b7e6d4924a83aa2e19dd72bc
   m_configObjects: {}
