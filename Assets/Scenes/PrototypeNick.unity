@@ -343,6 +343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scenesToLoad:
   - Environment
+  - UI
 --- !u!4 &55608438
 Transform:
   m_ObjectHideFlags: 0
