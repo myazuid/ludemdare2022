@@ -79,23 +79,9 @@ public class GateController : MonoBehaviour
 
         Destroy(processedTraveller);
 
-        // shift the remaining ones
-        /*
-        foreach (var traveller in outboundTravellerQueue)
-        {
-            var travellerController = traveller.GetComponent<TravellerController>();
-            travellerController.queuingPosition =
-                new Vector2(travellerController.queuingPosition.x -
-                travellerController.queueDistanceFromNextTraveller,
-                travellerController.queuingPosition.y);
-        }
-        */
-
         for (int i = 0; i < outboundTravellerQueue.Count; i++)
         {
             var traveller = outboundTravellerQueue[i].GetComponent<TravellerController>();
-            //traveller.queuingPosition = new Vector2(traveller.queuingPosition.x -
-            //    traveller.queueDistanceFromNextTraveller, traveller.queuingPosition.y);
             traveller.queuingPosition = FindQueuePositionAtIndex(i);
         }
 
@@ -109,12 +95,9 @@ public class GateController : MonoBehaviour
 
         outboundTravellerQueue.Remove(_traveller);
 
-        //for (int i = index; i < outboundTravellerQueue.Count; i++)
         for (int i = 0; i < outboundTravellerQueue.Count; i++)
         {
             var traveller = outboundTravellerQueue[i].GetComponent<TravellerController>();
-            //traveller.queuingPosition = new Vector2(traveller.queuingPosition.x -
-            //    traveller.queueDistanceFromNextTraveller, traveller.queuingPosition.y);
             traveller.queuingPosition = FindQueuePositionAtIndex(i);
         }
     }
