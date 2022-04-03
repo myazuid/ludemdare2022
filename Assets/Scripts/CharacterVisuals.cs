@@ -43,8 +43,9 @@ public class CharacterVisuals : MonoBehaviour
 
     private void Update()
     {
-        headContainer.transform.position += (headBobDown ? Vector3.down : Vector3.up) * Time.deltaTime * headBobSpeed;
-        if ((headBobDown && headContainer.transform.localPosition.y <= -halfMaxBobAmount) || (!headBobDown && headContainer.transform.localPosition.y >= 0))
-            headBobDown = !headBobDown;
+        // headContainer.transform.position += (headBobDown ? Vector3.down : Vector3.up) * Time.deltaTime * headBobSpeed;
+        // if ((headBobDown && headContainer.transform.localPosition.y <= -halfMaxBobAmount) || (!headBobDown && headContainer.transform.localPosition.y >= 0))
+        //     headBobDown = !headBobDown;
+        
     }
 }
