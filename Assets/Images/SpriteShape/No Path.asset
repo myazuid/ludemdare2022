@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af7181f404f1447c0a7a17b3070b952b, type: 3}
-  m_Name: Dirt Path
+  m_Name: No Path
   m_EditorClassIdentifier: 
   m_Angles:
   - m_Start: -180
     m_End: 180
     m_Order: 0
     m_Sprites:
-    - {fileID: 21300000, guid: 83b60505e9e7f42e78712e7314b9752c, type: 3}
+    - {fileID: 21300000, guid: d495cb53ccead4cd68029a5550b94f64, type: 3}
   m_FillTexture: {fileID: 0}
   m_CornerSprites:
   - m_CornerType: 0

@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startGate: {fileID: 0}
   endGate: {fileID: 0}
-  travellerSpeed: 10
+  baseTravellerSpeed: 1
+  actualtravellerSpeed: 1
   thresholdDistanceToEnterQueue: 1
   unhappinessLevel: 0
 --- !u!1001 &8318223925842970937
