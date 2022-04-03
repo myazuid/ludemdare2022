@@ -47,6 +47,8 @@ public class GateController : MonoBehaviour
 
         outboundTravellerQueue.RemoveAt(0);
 
+        Instantiate(beamEffect, processedTraveller.transform.position, Quaternion.identity);
+
         Destroy(processedTraveller);
 
         // shift the remaining ones

@@ -290,6 +290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outboundTravellerQueue: []
+  beamEffect: {fileID: 7927849024953937190, guid: 2468bd54937c77a4b9cf15cc0a5b4c31, type: 3}
 --- !u!1 &3425643390236125381
 GameObject:
   m_ObjectHideFlags: 0
