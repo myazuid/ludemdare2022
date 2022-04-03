@@ -21,6 +21,10 @@ public class GateController : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI gateNameText;
 
+    float gapBetweenQueuingTravellers = 0.3f;
+    float gapBetweenQueuingCircles = 0.2f;
+    float baseQueueRadius = 2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -76,6 +80,7 @@ public class GateController : MonoBehaviour
         Destroy(processedTraveller);
 
         // shift the remaining ones
+        /*
         foreach (var traveller in outboundTravellerQueue)
         {
             var travellerController = traveller.GetComponent<TravellerController>();
@@ -83,6 +88,15 @@ public class GateController : MonoBehaviour
                 new Vector2(travellerController.queuingPosition.x -
                 travellerController.queueDistanceFromNextTraveller,
                 travellerController.queuingPosition.y);
+        }
+        */
+
+        for (int i = 0; i < outboundTravellerQueue.Count; i++)
+        {
+            var traveller = outboundTravellerQueue[i].GetComponent<TravellerController>();
+            //traveller.queuingPosition = new Vector2(traveller.queuingPosition.x -
+            //    traveller.queueDistanceFromNextTraveller, traveller.queuingPosition.y);
+            traveller.queuingPosition = FindQueuePositionAtIndex(i);
         }
 
         //fire event to GameController to handle payments/remove traveller from global list
@@ -95,11 +109,13 @@ public class GateController : MonoBehaviour
 
         outboundTravellerQueue.Remove(_traveller);
 
-        for (int i = index; i < outboundTravellerQueue.Count; i++)
+        //for (int i = index; i < outboundTravellerQueue.Count; i++)
+        for (int i = 0; i < outboundTravellerQueue.Count; i++)
         {
             var traveller = outboundTravellerQueue[i].GetComponent<TravellerController>();
-            traveller.queuingPosition = new Vector2(traveller.queuingPosition.x -
-                traveller.queueDistanceFromNextTraveller, traveller.queuingPosition.y);
+            //traveller.queuingPosition = new Vector2(traveller.queuingPosition.x -
+            //    traveller.queueDistanceFromNextTraveller, traveller.queuingPosition.y);
+            traveller.queuingPosition = FindQueuePositionAtIndex(i);
         }
     }
 
@@ -111,5 +127,124 @@ public class GateController : MonoBehaviour
         {
             gateLevel++;
         }        
+    }
+
+    public Vector2 FindNextAvailableQueuePosition()
+    {
+        float circleRadius = baseQueueRadius;
+        bool positionFound;
+        int numberOfPlacesInPreviousCircles = 0;
+        float positionRoundCircle = -1;
+        int circleNumber = 0;
+
+        for (int i = 0; i < outboundTravellerQueue.Count + 1; i++)
+        {
+            positionFound = false;
+
+            while (!positionFound)
+            {
+                // circumference of the circle
+                var circumference = Mathf.PI * circleRadius;
+
+                // the position in this circle that we're checking
+                var placeInThisCircle = i - numberOfPlacesInPreviousCircles;
+
+                // the position around this circle for this one
+                float gap;
+                if (circleNumber > 0)
+                {
+                    gap = gapBetweenQueuingTravellers - (0.1f * circleNumber);
+                }
+                else
+                {
+                    gap = gapBetweenQueuingTravellers;
+                }
+                positionRoundCircle = circumference - (gap * placeInThisCircle);
+
+                if (positionRoundCircle < 0)
+                {
+                    circleNumber++;
+                    numberOfPlacesInPreviousCircles = i;
+                    circleRadius += gapBetweenQueuingCircles;
+                }
+                else
+                {
+                    positionFound = true;
+                }
+            }
+        }
+
+        /* Get the vector direction */
+        var vertical = Mathf.Sin(positionRoundCircle);
+        var horizontal = Mathf.Cos(positionRoundCircle);
+
+        var spawnDir = new Vector2(horizontal, vertical);
+        if (circleNumber > 0)
+        {
+            spawnDir += (spawnDir.normalized * gapBetweenQueuingCircles * circleNumber);
+        }
+        var spawnPos = (Vector2)transform.position + spawnDir;
+
+        return (spawnPos);
+    }
+
+    // COPY OF ABOVE DO NOT EDIT!!!
+    public Vector2 FindQueuePositionAtIndex(int _index)
+    {
+        float circleRadius = baseQueueRadius;
+        bool positionFound;
+        int numberOfPlacesInPreviousCircles = 0;
+        float positionRoundCircle = -1;
+        int circleNumber = 0;
+
+        for (int i = 0; i < _index + 1; i++)
+        {
+            positionFound = false;
+
+            while (!positionFound)
+            {
+                // circumference of the circle
+                var circumference = Mathf.PI * circleRadius;
+
+                // the position in this circle that we're checking
+                var placeInThisCircle = i - numberOfPlacesInPreviousCircles;
+
+                // the position around this circle for this one
+                float gap;
+                if (circleNumber > 0)
+                {
+                    gap = gapBetweenQueuingTravellers - (0.1f * circleNumber);
+                }
+                else
+                {
+                    gap = gapBetweenQueuingTravellers;
+                }
+                positionRoundCircle = circumference - (gap * placeInThisCircle);
+
+                if (positionRoundCircle < 0)
+                {
+                    circleNumber++;
+                    numberOfPlacesInPreviousCircles = i;
+                    circleRadius += gapBetweenQueuingCircles;
+                }
+                else
+                {
+                    positionFound = true;
+                }
+            }
+        }
+
+        /* Get the vector direction */
+        var vertical = Mathf.Sin(positionRoundCircle);
+        var horizontal = Mathf.Cos(positionRoundCircle);
+
+        var spawnDir = new Vector2(horizontal, vertical);
+        if (circleNumber > 0)
+        {
+            spawnDir += (spawnDir.normalized * gapBetweenQueuingCircles * circleNumber);
+        }
+        var spawnPos = (Vector2)transform.position + spawnDir;
+
+        return (spawnPos);
     }
 }
