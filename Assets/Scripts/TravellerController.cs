@@ -1,10 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TravellerController : MonoBehaviour
 {
-    [SerializeField] private GameObject startGate, endGate;
+    public GameObject startGate, endGate;
+    private GateController endGateController;
+    Vector2 destination;
 
     // MOVEMENT
     [SerializeField] float travellerSpeed;
@@ -12,39 +16,36 @@ public class TravellerController : MonoBehaviour
     private float frequencyToCheckProximityToEndGate = 1;
     private float nextTimeToCheckProximityToEndGate = 0;
 
-    public enum TravellerState { Travelling, Queuing };
+    public enum TravellerState { Travelling, EnteringQueue , Queuing };
     private TravellerState travellerState = TravellerState.Travelling;
 
     // QUEUING STUFF
     float timeSpentQueuing;
-    float queuingPatienceDuration = 30;
-    private float queueDistanceFromNextTraveller = 0.1f;
+    float minQueuingPatienceDuration = 10, maxQueuingPatienceDuration = 40;
+    float queuingPatienceDuration;
+    private float queueDistanceFromNextTraveller = 0.3f;
 
-    public enum UnhappinessLevelType { Happy, Unsatisfied, Angry, Leaving };
-    private UnhappinessLevelType UnhappinessLevel
+    public enum UnhappinessLevel { Happy, Unsatisfied, Angry };
+    public UnhappinessLevel unhappinessLevel;
+
+    private void Start()
     {
-        get
-        {
-            var happyThreshold = queuingPatienceDuration * 0.33f;
-            var unsatisfiedThreshold = queuingPatienceDuration * 0.66f;
+        queuingPatienceDuration = Random.Range(minQueuingPatienceDuration,
+            maxQueuingPatienceDuration);
 
-            if (timeSpentQueuing < happyThreshold)
-            {
-                return UnhappinessLevelType.Happy;
-            }
-            else if (timeSpentQueuing < unsatisfiedThreshold)
-            {
-                return UnhappinessLevelType.Unsatisfied;
-            }
-            else if (timeSpentQueuing < queuingPatienceDuration)
-            {
-                return UnhappinessLevelType.Angry;
-            }
-            else
-            {
-                return UnhappinessLevelType.Leaving;
-            }
-        }
+        destination = endGate.transform.Find("DestinationPoint").position;
+
+        endGateController = endGate.GetComponent<GateController>();
+    }
+
+    private void OnEnable()
+    {
+        //PathManager.OnPathUpgraded += **REPLACE_ME_WITH_PATH_HANDLER_SPEED_CHANGE_LOGIC**;
+    }
+
+    private void OnDisable()
+    {
+        //PathManager.OnPathUpgraded -= **REPLACE_ME_WITH_PATH_HANDLER_SPEED_CHANGE_LOGIC**;
     }
 
     // Update is called once per frame
@@ -52,32 +53,36 @@ public class TravellerController : MonoBehaviour
     {
         if (travellerState == TravellerState.Travelling)
         {
-            MoveTowardsEndGate(endGate);
+            MoveTowardsDestination(destination);
+        }
+        else if (travellerState == TravellerState.EnteringQueue)
+        {
+            MoveTowardsQueuePosition(destination);
         }
         else if (travellerState == TravellerState.Queuing)
         {
-            timeSpentQueuing += Time.deltaTime;
+            CheckTravellerQueuingPatience();
         }
     }
 
-    private void MoveTowardsEndGate(GameObject _endGate)
+    private void MoveTowardsDestination(Vector2 _destination)
     {
-        var dir = _endGate.transform.position - transform.position;
+        var dir = _destination - (Vector2)transform.position;
         transform.Translate(dir.normalized * Time.deltaTime);
 
-        CheckForProximityToEndGate(_endGate);
+        CheckForProximityToEndGate(_destination, endGate);
     }
 
-    private void CheckForProximityToEndGate(GameObject _endGate)
+    private void CheckForProximityToEndGate(Vector2 _destination,
+        GameObject _endGate)
     {
         if (Time.time > nextTimeToCheckProximityToEndGate)
         {
-            var dist = Vector2.Distance(transform.position,
-            _endGate.transform.position);
+            var dist = Vector2.Distance(transform.position, _destination);
 
             if (dist < thresholdDistanceToEnterQueue)
             {
-                EnterQueue(_endGate);
+                StartEnteringQueue(_endGate);
             }
 
             nextTimeToCheckProximityToEndGate = Time.time +
@@ -85,18 +90,92 @@ public class TravellerController : MonoBehaviour
         }
     }
 
-    private void EnterQueue(GameObject _endGate)
+    private void StartEnteringQueue(GameObject _endGate)
     {
-        travellerState = TravellerState.Queuing;
+        travellerState = TravellerState.EnteringQueue;
 
-        var gateController = endGate.GetComponent<GateController>();
-        gateController.outboundTravellerQueue.Add(this.gameObject);
+        endGateController.outboundTravellerQueue.Add(this.gameObject);
 
         var queueStart = endGate.transform.Find("QueueStart").position;
         var xPos = queueStart.x + (queueDistanceFromNextTraveller *
-            gateController.outboundTravellerQueue.Count);
+            endGateController.outboundTravellerQueue.Count);
 
-        transform.position = new Vector2(xPos, queueStart.y);
+        destination = new Vector2(xPos, queueStart.y);
+    }
 
+    private void MoveTowardsQueuePosition(Vector2 _destination)
+    {
+        var dir = _destination - (Vector2)transform.position;
+        transform.Translate(dir.normalized * Time.deltaTime);
+
+        if (Time.time > nextTimeToCheckProximityToEndGate)
+        {
+            var dist = Vector2.Distance(transform.position, _destination);
+
+            if (dist < 0.001f)
+            {
+                EnterQueue(endGate);
+            }
+            else
+            {
+                nextTimeToCheckProximityToEndGate = Time.time +
+                frequencyToCheckProximityToEndGate;
+            }
+        }
+    }
+
+    private void EnterQueue(GameObject _endGate)
+    {
+        travellerState = TravellerState.Queuing;
+    }
+
+    private void CheckTravellerQueuingPatience()
+    {
+        timeSpentQueuing += Time.deltaTime;
+
+        var happyThreshold = queuingPatienceDuration * 0.33f;
+        var unsatisfiedThreshold = queuingPatienceDuration * 0.66f;
+
+        if (timeSpentQueuing < happyThreshold)
+        {
+            if (unhappinessLevel != UnhappinessLevel.Happy)
+            {
+                unhappinessLevel = UnhappinessLevel.Happy;
+            }
+        }
+        else if (timeSpentQueuing < unsatisfiedThreshold)
+        {
+            if (unhappinessLevel != UnhappinessLevel.Unsatisfied)
+            {
+                unhappinessLevel = UnhappinessLevel.Unsatisfied;
+                print(this.gameObject.name + " is unsatisfied.");
+            }
+
+        }
+        else if (timeSpentQueuing < queuingPatienceDuration)
+        {
+            if (unhappinessLevel != UnhappinessLevel.Angry)
+            {
+                unhappinessLevel = UnhappinessLevel.Angry;
+                print(this.gameObject.name + " is angry!");
+            }
+        }
+        else
+        {
+            ExitQueueAndLeave(endGate);
+        }
+    }
+
+    private void ExitQueueAndLeave(GameObject _endGate)
+    {
+        print(this.gameObject.name + "says - Fuck this, I'm leaving!");
+
+        //fire event to GameController to handle payments/remove traveller from global list
+        GateController.OnTravellerProcessed?.Invoke(gameObject, false);
+
+        var gateController = endGate.GetComponent<GateController>();
+        gateController.RemoveTravellerFromQueueAndShiftDownQueue(this.gameObject);
+
+        Destroy(this.gameObject);
     }
 }

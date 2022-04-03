@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,21 +10,21 @@ public class GateController : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
+    public static Action<GameObject, bool> OnTravellerProcessed;
+
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 
     private void OnMouseDown()
     {
-        ProcessOutboundTraveller(); 
+        if (outboundTravellerQueue.Count > 0)
+        {
+            ProcessOutboundTraveller();
+        }
     }
 
     private void OnMouseEnter()
@@ -40,10 +41,6 @@ public class GateController : MonoBehaviour
 
     private void ProcessOutboundTraveller()
     {
-        // send payment fee to the GameController
-
-        // and tell gamecontroller to remove from its list
-
         var processedTraveller = outboundTravellerQueue[0];
 
         outboundTravellerQueue.RemoveAt(0);
@@ -56,6 +53,23 @@ public class GateController : MonoBehaviour
             traveller.transform.position =
                 new Vector2(traveller.transform.position.x - 0.1f,
                 traveller.transform.position.y);
+        }
+
+        //fire event to GameController to handle payments/remove traveller from global list
+        OnTravellerProcessed?.Invoke(processedTraveller, true);
+    }
+
+    public void RemoveTravellerFromQueueAndShiftDownQueue(GameObject _traveller)
+    {
+        var index = outboundTravellerQueue.IndexOf(_traveller);
+
+        outboundTravellerQueue.Remove(_traveller);
+
+        for (int i = index; i < outboundTravellerQueue.Count; i++)
+        {
+            outboundTravellerQueue[i].transform.position =
+                new Vector2(outboundTravellerQueue[i].transform.position.x -
+                0.1f, outboundTravellerQueue[i].transform.position.y);
         }
     }
 }
