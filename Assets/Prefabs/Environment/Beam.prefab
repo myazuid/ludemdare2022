@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 0.4
-  spriteRenderer: {fileID: 7927849025930969719}
   light: {fileID: 4794504781293049854}
   curve:
     serializedVersion: 2
@@ -106,7 +105,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7927849025930969720}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_Children: []
   m_Father: {fileID: 7927849024953937188}
@@ -150,7 +149,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 489559935
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 1420f1cc02af9d04fbca9bb45f8cc9f3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -228,7 +227,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5979077696254277065, guid: e3ea164faca77664a91e7a35bc6ef2b0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.108
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5979077696254277065, guid: e3ea164faca77664a91e7a35bc6ef2b0, type: 3}
       propertyPath: m_LocalPosition.z

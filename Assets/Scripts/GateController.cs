@@ -14,12 +14,31 @@ public class GateController : MonoBehaviour
 
     [SerializeField] private GameObject beamEffect;
 
+    private int gateLevel = 0;
+    private float timeOfNextGateProcessing = 0;
+    private float gateProcessingFrequency = 1;
+
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-    
+
+    private void Update()
+    {
+        if (gateLevel > 0) // if it is automated at all
+        {
+            if (Time.time > timeOfNextGateProcessing)
+            {
+                for (int i = 0; i < gateLevel; i++)
+                {
+                    ProcessOutboundTraveller();
+                }
+
+                timeOfNextGateProcessing = Time.time + gateProcessingFrequency;
+            }
+        }
+    }
 
     private void OnMouseDown()
     {
@@ -47,14 +66,18 @@ public class GateController : MonoBehaviour
 
         outboundTravellerQueue.RemoveAt(0);
 
+        Instantiate(beamEffect, processedTraveller.transform.position, Quaternion.identity);
+
         Destroy(processedTraveller);
 
         // shift the remaining ones
         foreach (var traveller in outboundTravellerQueue)
         {
-            traveller.transform.position =
-                new Vector2(traveller.transform.position.x - 0.1f,
-                traveller.transform.position.y);
+            var travellerController = traveller.GetComponent<TravellerController>();
+            travellerController.queuingPosition =
+                new Vector2(travellerController.queuingPosition.x -
+                travellerController.queueDistanceFromNextTraveller,
+                travellerController.queuingPosition.y);
         }
 
         //fire event to GameController to handle payments/remove traveller from global list
@@ -73,5 +96,10 @@ public class GateController : MonoBehaviour
             traveller.queuingPosition = new Vector2(traveller.queuingPosition.x -
                 traveller.queueDistanceFromNextTraveller, traveller.queuingPosition.y);
         }
+    }
+
+    public void UpgradeGate()
+    {
+        gateLevel++;
     }
 }
