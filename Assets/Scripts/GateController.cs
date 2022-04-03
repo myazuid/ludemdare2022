@@ -12,6 +12,8 @@ public class GateController : MonoBehaviour
 
     public static Action<GameObject, bool> OnTravellerProcessed;
 
+    [SerializeField] private GameObject beamEffect;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +47,8 @@ public class GateController : MonoBehaviour
 
         outboundTravellerQueue.RemoveAt(0);
 
+        Instantiate(beamEffect, processedTraveller.transform.position, Quaternion.identity);
+
         Destroy(processedTraveller);
 
         // shift the remaining ones
@@ -67,9 +71,9 @@ public class GateController : MonoBehaviour
 
         for (int i = index; i < outboundTravellerQueue.Count; i++)
         {
-            outboundTravellerQueue[i].transform.position =
-                new Vector2(outboundTravellerQueue[i].transform.position.x -
-                0.1f, outboundTravellerQueue[i].transform.position.y);
+            var traveller = outboundTravellerQueue[i].GetComponent<TravellerController>();
+            traveller.queuingPosition = new Vector2(traveller.queuingPosition.x -
+                traveller.queueDistanceFromNextTraveller, traveller.queuingPosition.y);
         }
     }
 }

@@ -11,22 +11,27 @@ public class TravellerController : MonoBehaviour
     Vector2 destination;
 
     // MOVEMENT
-    [SerializeField] float travellerSpeed;
+    [SerializeField] float baseTravellerSpeed;
+    [SerializeField] float actualtravellerSpeed;
     [SerializeField] float thresholdDistanceToEnterQueue;
     private float frequencyToCheckProximityToEndGate = 1;
     private float nextTimeToCheckProximityToEndGate = 0;
 
-    public enum TravellerState { Travelling, EnteringQueue , Queuing };
+    public enum TravellerState { Travelling, Queuing };
     private TravellerState travellerState = TravellerState.Travelling;
 
     // QUEUING STUFF
     float timeSpentQueuing;
     float minQueuingPatienceDuration = 10, maxQueuingPatienceDuration = 40;
     float queuingPatienceDuration;
-    private float queueDistanceFromNextTraveller = 0.3f;
+    public float queueDistanceFromNextTraveller = 0.3f;
+    public Vector2 queuingPosition;
 
     public enum UnhappinessLevel { Happy, Unsatisfied, Angry };
     public UnhappinessLevel unhappinessLevel;
+
+    // UPGRADE STUFF
+    private PathController pathController;
 
     private void Start()
     {
@@ -36,16 +41,19 @@ public class TravellerController : MonoBehaviour
         destination = endGate.transform.Find("DestinationPoint").position;
 
         endGateController = endGate.GetComponent<GateController>();
+
+        pathController = PathManager.instance.ReturnPathController(startGate, endGate);
+        SetSpeedBasedOnPathLevel(pathController.pathLevel);
     }
 
     private void OnEnable()
     {
-        //PathManager.OnPathUpgraded += **REPLACE_ME_WITH_PATH_HANDLER_SPEED_CHANGE_LOGIC**;
+        PathManager.OnPathUpgraded += CheckForPathUpdate;
     }
 
     private void OnDisable()
     {
-        //PathManager.OnPathUpgraded -= **REPLACE_ME_WITH_PATH_HANDLER_SPEED_CHANGE_LOGIC**;
+        PathManager.OnPathUpgraded -= CheckForPathUpdate;
     }
 
     // Update is called once per frame
@@ -55,20 +63,32 @@ public class TravellerController : MonoBehaviour
         {
             MoveTowardsDestination(destination);
         }
-        else if (travellerState == TravellerState.EnteringQueue)
-        {
-            MoveTowardsQueuePosition(destination);
-        }
         else if (travellerState == TravellerState.Queuing)
         {
+            MoveTowardsQueuePosition(queuingPosition);
             CheckTravellerQueuingPatience();
         }
+    }
+
+    private void CheckForPathUpdate(PathController _pathController)
+    {
+        if (pathController == _pathController)
+        {
+            SetSpeedBasedOnPathLevel(pathController.pathLevel);
+        }
+    }
+
+    private void SetSpeedBasedOnPathLevel(int _pathLevel)
+    {
+        var speedMultiplier = PathManager.
+                instance.pathLevelSpeedMultiplier[_pathLevel];
+        actualtravellerSpeed = baseTravellerSpeed * speedMultiplier;
     }
 
     private void MoveTowardsDestination(Vector2 _destination)
     {
         var dir = _destination - (Vector2)transform.position;
-        transform.Translate(dir.normalized * Time.deltaTime);
+        transform.Translate(dir.normalized * actualtravellerSpeed * Time.deltaTime);
 
         CheckForProximityToEndGate(_destination, endGate);
     }
@@ -92,21 +112,21 @@ public class TravellerController : MonoBehaviour
 
     private void StartEnteringQueue(GameObject _endGate)
     {
-        travellerState = TravellerState.EnteringQueue;
-
         endGateController.outboundTravellerQueue.Add(this.gameObject);
 
         var queueStart = endGate.transform.Find("QueueStart").position;
         var xPos = queueStart.x + (queueDistanceFromNextTraveller *
             endGateController.outboundTravellerQueue.Count);
 
-        destination = new Vector2(xPos, queueStart.y);
+        queuingPosition = new Vector2(xPos, queueStart.y);
+
+        travellerState = TravellerState.Queuing;
     }
 
     private void MoveTowardsQueuePosition(Vector2 _destination)
     {
         var dir = _destination - (Vector2)transform.position;
-        transform.Translate(dir.normalized * Time.deltaTime);
+        transform.Translate(dir.normalized * actualtravellerSpeed * Time.deltaTime);
 
         if (Time.time > nextTimeToCheckProximityToEndGate)
         {
