@@ -508,9 +508,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   travellerPrefab: {fileID: 3977359443929023188, guid: 4275cb39155d04cd1ae83228b1eac422, type: 3}
   gatesParent: {fileID: 1764440992}
-  fareCost: 25
-  pathUpgradeCosts: 000000000a00000014000000
-  gateUpgradeCosts: 0000000064000000c8000000
+  fareCost: 5
+  pathUpgradeCosts: 32000000fa000000f4010000
+  gateUpgradeCosts: 32000000fa000000ee020000
   _totalProcessed: 0
 --- !u!4 &559852555
 Transform:

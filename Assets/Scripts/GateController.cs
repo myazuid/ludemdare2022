@@ -110,7 +110,7 @@ public class GateController : MonoBehaviour
     public void UpgradeGate()
     {
         var success = GameController.instance.SpendFromBalance(
-            GameController.instance.gateUpgradeCosts[gateLevel + 1]);
+            GameController.instance.gateUpgradeCosts[gateLevel]);
         if (success)
         {
             gateLevel++;

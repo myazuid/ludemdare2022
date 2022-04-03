@@ -118,7 +118,7 @@ public class GameController : MonoBehaviour
 
     public bool SpendFromBalance(int purchaseCost)
     {
-        if (_currentBalance - purchaseCost > 0)
+        if (_currentBalance - purchaseCost >= 0)
         {
             _currentBalance -= purchaseCost;
             onBalanceChanged.Invoke(purchaseCost);
