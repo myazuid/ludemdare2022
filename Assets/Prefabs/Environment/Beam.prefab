@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 0.4
-  spriteRenderer: {fileID: 7927849025930969719}
   light: {fileID: 4794504781293049854}
   curve:
     serializedVersion: 2
