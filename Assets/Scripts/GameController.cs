@@ -14,8 +14,12 @@ public class GameController : MonoBehaviour
     private GameObject gatesParent;
     [SerializeField] 
     private int fareCost;
-    
-    
+    [SerializeField]
+    public List<int> pathUpgradeCosts = new List<int>();
+    [SerializeField]
+    public List<int> gateUpgradeCosts = new List<int>();
+
+
     private float _travellerSpawnRateInSeconds;
     private float _increaseDifficultyFrequencyInSeconds;
     private float _timeSinceLastSpawn;
@@ -44,8 +48,6 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
-
-
         _travellers = new List<GameObject>();
         _approvalRating = 10f;
         _approvalRatingChangeSmall = 0.1f; 
@@ -55,11 +57,9 @@ public class GameController : MonoBehaviour
 
         InvokeRepeating(nameof(UpdateSpawnRate), _increaseDifficultyFrequencyInSeconds, _increaseDifficultyFrequencyInSeconds);
         
-        
         //temp UI stuff
         _currentBalanceText.text = "$" + _currentBalance;
         _currentApprovalRatingText.text = "Approval Rating: " + _approvalRating;
-        //
     }
 
     private void Update()
@@ -98,13 +98,13 @@ public class GameController : MonoBehaviour
         AddTravellerToTotalCount(traveller);
     }
 
-    private void AddToBalance()
+    public void AddToBalance()
     {
         _currentBalance += fareCost;
         UpdateUI();
     }
 
-    private void SpendFromBalance(int purchaseCost)
+    public void SpendFromBalance(int purchaseCost)
     {
         if (_currentBalance - purchaseCost > 0)
         {
