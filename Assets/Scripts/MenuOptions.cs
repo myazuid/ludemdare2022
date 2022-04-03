@@ -28,7 +28,6 @@ public class MenuOptions : MonoBehaviour
 
     private void GameSoundChanged(float arg0)
     {
-        Debug.Log(arg0);
         gameSoundAudioMixerGroup.audioMixer.SetFloat("Volume", arg0);
     }
 
