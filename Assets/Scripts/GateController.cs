@@ -26,7 +26,7 @@ public class GateController : MonoBehaviour
 
     private void Update()
     {
-        if (gateLevel > 0) // if it is automated at all
+        if (gateLevel > 0 && outboundTravellerQueue.Count > 0) // if it is automated at all
         {
             if (Time.time > timeOfNextGateProcessing)
             {
@@ -98,6 +98,7 @@ public class GateController : MonoBehaviour
         }
     }
 
+    [ContextMenu("Upgrade Gate")]
     public void UpgradeGate()
     {
         gateLevel++;
