@@ -5,6 +5,8 @@ using UnityEngine;
 public class TravellerController : MonoBehaviour
 {
     public GameObject startGate, endGate;
+    private GateController endGateController;
+    Vector2 destination;
 
     // MOVEMENT
     [SerializeField] float travellerSpeed;
@@ -12,7 +14,7 @@ public class TravellerController : MonoBehaviour
     private float frequencyToCheckProximityToEndGate = 1;
     private float nextTimeToCheckProximityToEndGate = 0;
 
-    public enum TravellerState { Travelling, Queuing };
+    public enum TravellerState { Travelling, EnteringQueue , Queuing };
     private TravellerState travellerState = TravellerState.Travelling;
 
     // QUEUING STUFF
@@ -28,6 +30,10 @@ public class TravellerController : MonoBehaviour
     {
         queuingPatienceDuration = Random.Range(minQueuingPatienceDuration,
             maxQueuingPatienceDuration);
+
+        destination = endGate.transform.Find("DestinationPoint").position;
+
+        endGateController = endGate.GetComponent<GateController>();
     }
 
     // Update is called once per frame
@@ -35,64 +41,36 @@ public class TravellerController : MonoBehaviour
     {
         if (travellerState == TravellerState.Travelling)
         {
-            MoveTowardsEndGate(endGate);
+            MoveTowardsDestination(destination);
+        }
+        else if (travellerState == TravellerState.EnteringQueue)
+        {
+            MoveTowardsQueuePosition(destination);
         }
         else if (travellerState == TravellerState.Queuing)
         {
-            timeSpentQueuing += Time.deltaTime;
-
-            var happyThreshold = queuingPatienceDuration * 0.33f;
-            var unsatisfiedThreshold = queuingPatienceDuration * 0.66f;
-
-            if (timeSpentQueuing < happyThreshold)
-            {
-                if (unhappinessLevel != UnhappinessLevel.Happy)
-                {
-                    unhappinessLevel = UnhappinessLevel.Happy;
-                }
-            }
-            else if (timeSpentQueuing < unsatisfiedThreshold)
-            {
-                if (unhappinessLevel != UnhappinessLevel.Unsatisfied)
-                {
-                    unhappinessLevel = UnhappinessLevel.Unsatisfied;
-                    print(this.gameObject.name + " is unsatisfied.");
-                }
-                
-            }
-            else if (timeSpentQueuing < queuingPatienceDuration)
-            {
-                if (unhappinessLevel != UnhappinessLevel.Angry)
-                {
-                    unhappinessLevel = UnhappinessLevel.Angry;
-                    print(this.gameObject.name + " is angry!");
-                }
-            }
-            else
-            {
-                ExitQueueAndLeave(endGate);
-            }
+            CheckTravellerQueuingPatience();
         }
     }
 
-    private void MoveTowardsEndGate(GameObject _endGate)
+    private void MoveTowardsDestination(Vector2 _destination)
     {
-        var dir = _endGate.transform.position - transform.position;
+        var dir = _destination - (Vector2)transform.position;
         transform.Translate(dir.normalized * Time.deltaTime);
 
-        CheckForProximityToEndGate(_endGate);
+        CheckForProximityToEndGate(_destination, endGate);
     }
 
-    private void CheckForProximityToEndGate(GameObject _endGate)
+    private void CheckForProximityToEndGate(Vector2 _destination,
+        GameObject _endGate)
     {
         if (Time.time > nextTimeToCheckProximityToEndGate)
         {
-            var dist = Vector2.Distance(transform.position,
-            _endGate.transform.position);
+            var dist = Vector2.Distance(transform.position, _destination);
 
             if (dist < thresholdDistanceToEnterQueue)
             {
-                EnterQueue(_endGate);
+                StartEnteringQueue(_endGate);
             }
 
             nextTimeToCheckProximityToEndGate = Time.time +
@@ -100,19 +78,80 @@ public class TravellerController : MonoBehaviour
         }
     }
 
-    private void EnterQueue(GameObject _endGate)
+    private void StartEnteringQueue(GameObject _endGate)
     {
-        travellerState = TravellerState.Queuing;
+        travellerState = TravellerState.EnteringQueue;
 
-        var gateController = endGate.GetComponent<GateController>();
-        gateController.outboundTravellerQueue.Add(this.gameObject);
+        endGateController.outboundTravellerQueue.Add(this.gameObject);
 
         var queueStart = endGate.transform.Find("QueueStart").position;
         var xPos = queueStart.x + (queueDistanceFromNextTraveller *
-            gateController.outboundTravellerQueue.Count);
+            endGateController.outboundTravellerQueue.Count);
 
-        transform.position = new Vector2(xPos, queueStart.y);
+        destination = new Vector2(xPos, queueStart.y);
+    }
 
+    private void MoveTowardsQueuePosition(Vector2 _destination)
+    {
+        var dir = _destination - (Vector2)transform.position;
+        transform.Translate(dir.normalized * Time.deltaTime);
+
+        if (Time.time > nextTimeToCheckProximityToEndGate)
+        {
+            var dist = Vector2.Distance(transform.position, _destination);
+
+            if (dist < 0.001f)
+            {
+                EnterQueue(endGate);
+            }
+            else
+            {
+                nextTimeToCheckProximityToEndGate = Time.time +
+                frequencyToCheckProximityToEndGate;
+            }
+        }
+    }
+
+    private void EnterQueue(GameObject _endGate)
+    {
+        travellerState = TravellerState.Queuing;
+    }
+
+    private void CheckTravellerQueuingPatience()
+    {
+        timeSpentQueuing += Time.deltaTime;
+
+        var happyThreshold = queuingPatienceDuration * 0.33f;
+        var unsatisfiedThreshold = queuingPatienceDuration * 0.66f;
+
+        if (timeSpentQueuing < happyThreshold)
+        {
+            if (unhappinessLevel != UnhappinessLevel.Happy)
+            {
+                unhappinessLevel = UnhappinessLevel.Happy;
+            }
+        }
+        else if (timeSpentQueuing < unsatisfiedThreshold)
+        {
+            if (unhappinessLevel != UnhappinessLevel.Unsatisfied)
+            {
+                unhappinessLevel = UnhappinessLevel.Unsatisfied;
+                print(this.gameObject.name + " is unsatisfied.");
+            }
+
+        }
+        else if (timeSpentQueuing < queuingPatienceDuration)
+        {
+            if (unhappinessLevel != UnhappinessLevel.Angry)
+            {
+                unhappinessLevel = UnhappinessLevel.Angry;
+                print(this.gameObject.name + " is angry!");
+            }
+        }
+        else
+        {
+            ExitQueueAndLeave(endGate);
+        }
     }
 
     private void ExitQueueAndLeave(GameObject _endGate)

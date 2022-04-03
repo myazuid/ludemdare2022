@@ -6,15 +6,15 @@ public class TestingTravellerSpawning : MonoBehaviour
 {
     [SerializeField] GameObject travellerPrefab;
 
-    [SerializeField] List<GameObject> gates = new List<GameObject>();
-
     float nextSpawnTime = 0;
     float spawnFrequency = 0.5f;
+
+    Transform gatesParent;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        gatesParent = GameObject.Find("Gates").transform;
     }
 
     // Update is called once per frame
@@ -29,18 +29,20 @@ public class TestingTravellerSpawning : MonoBehaviour
 
     private void SpawnTraveller()
     {
-        int startGate = Random.Range(0, gates.Count);
+        int startGate = Random.Range(0, gatesParent.childCount);
         int endGate;
         do
         {
-            endGate = Random.Range(0, gates.Count);
+            endGate = Random.Range(0, gatesParent.childCount);
         } while (endGate == startGate);
 
         var traveller =  Instantiate(travellerPrefab,
-            gates[startGate].transform.position,
+            gatesParent.GetChild(startGate).transform.position,
             Quaternion.identity);
 
-        traveller.GetComponent<TravellerController>().startGate = gates[startGate];
-        traveller.GetComponent<TravellerController>().endGate = gates[endGate];
+        traveller.GetComponent<TravellerController>().startGate =
+            gatesParent.GetChild(startGate).gameObject;
+        traveller.GetComponent<TravellerController>().endGate =
+            gatesParent.GetChild(endGate).gameObject;
     }
 }
