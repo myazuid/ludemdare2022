@@ -12,6 +12,9 @@ public class CharacterVisuals : MonoBehaviour
     public SpriteRenderer mouthRender;
     public SpriteRenderer craft;
 
+    public SpriteRenderer moodletIcon;
+    private MOODLET_STATE _moodletState = MOODLET_STATE.NONE;
+
 
     public Sprite[] heads;
     public Color[] headColors;
@@ -23,11 +26,14 @@ public class CharacterVisuals : MonoBehaviour
     public Sprite[] crafts;
     public Color[] craftColors;
 
+    public Sprite[] moodletNoneHappySadAngry;
+    public Transform moodletContainer;
+
     private bool craftBobDown;
     private float craftBobSpeed;
     private float craftMaxBobAmount = .2f;
     private float craftHalfMaxBobAmount;
-    
+
     private bool headBobDown;
     private float headBobSpeed;
     private float maxBobAmount = .1f;
@@ -80,11 +86,33 @@ public class CharacterVisuals : MonoBehaviour
         if (parentLastPosition.x > myParent.transform.position.x + .005f)
         {
             transform.localScale = new Vector3(-startingScale.x, startingScale.y, startingScale.z);
-        } else if (parentLastPosition.x < myParent.transform.position.x - .005f)
+        }
+        else if (parentLastPosition.x < myParent.transform.position.x - .005f)
         {
             transform.localScale = new Vector3(startingScale.x, startingScale.y, startingScale.z);
         }
-        
+
         parentLastPosition = myParent.transform.position;
+    }
+
+    public enum MOODLET_STATE
+    {
+        NONE = -1,
+        HAPPY = 0,
+        SAD = 1,
+        ANGRY = 2
+    }
+
+    public void setMoodlet(MOODLET_STATE state)
+    {
+        if (_moodletState == state) return;
+
+        moodletContainer.gameObject.SetActive(state != MOODLET_STATE.NONE);
+        if (state != MOODLET_STATE.NONE)
+        {
+            moodletIcon.sprite = moodletNoneHappySadAngry[(int)state];
+        }
+
+        _moodletState = state;
     }
 }
