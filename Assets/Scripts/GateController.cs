@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GateController : MonoBehaviour
 {
@@ -18,10 +19,14 @@ public class GateController : MonoBehaviour
     private float timeOfNextGateProcessing = 0;
     private float gateProcessingFrequency = 1;
 
+    [SerializeField] private TextMeshProUGUI gateNameText;
+
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        gateNameText.text = GateSpawner.instance.ReturnUnusedWorldName();
     }
 
     private void Update()

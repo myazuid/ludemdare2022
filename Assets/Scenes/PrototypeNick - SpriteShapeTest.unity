@@ -270,6 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scenesToLoad:
+  - UI
   - Environment
 --- !u!4 &55608438
 Transform:
@@ -419,6 +420,7 @@ GameObject:
   m_Component:
   - component: {fileID: 559852555}
   - component: {fileID: 559852554}
+  - component: {fileID: 559852556}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -457,6 +459,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &559852556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 559852553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5785bf62d9ca4c0db6664c9b91b5de4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  worldsCsv: {fileID: 4900000, guid: c0a3393498264407c8e5eecbce93f47c, type: 3}
 --- !u!1 &645374007
 GameObject:
   m_ObjectHideFlags: 0
@@ -811,11 +826,32 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1272073818 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3425643389904951679, guid: c501d1487e510433fac28c112a28b595, type: 3}
+  m_PrefabInstance: {fileID: 2000027917}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1272073819 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3425643389904951673, guid: c501d1487e510433fac28c112a28b595, type: 3}
   m_PrefabInstance: {fileID: 2000027917}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1272073823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272073818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7004d1466688241c1975588b5ebd4f3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 3977359443929023188, guid: 212ab30df88e64752b841616a8c9117a, type: 3}
+  gapBetweenQueuingTravellers: 0.3
+  gapBetweenQueuingCircles: 1
+  baseQueueRadius: 2
 --- !u!1 &1679015052
 GameObject:
   m_ObjectHideFlags: 0
