@@ -21,7 +21,7 @@ public class TravellerController : MonoBehaviour
     float timeSpentQueuing;
     float minQueuingPatienceDuration = 10, maxQueuingPatienceDuration = 40;
     float queuingPatienceDuration;
-    private float queueDistanceFromNextTraveller = 0.1f;
+    private float queueDistanceFromNextTraveller = 0.3f;
 
     public enum UnhappinessLevel { Happy, Unsatisfied, Angry };
     public UnhappinessLevel unhappinessLevel;
