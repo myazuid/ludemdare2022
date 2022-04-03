@@ -64,17 +64,22 @@ public class PathController : MonoBehaviour
 
     public void UpgradePath()
     {
-        if (pathLevel == pathSprites.Count - 1)
+        var success = GameController.instance.SpendFromBalance(
+            GameController.instance.pathUpgradeCosts[pathLevel + 1]);
+        if (success)
         {
-            print("Max level already");
-            return;
+            if (pathLevel == pathSprites.Count - 1)
+            {
+                print("Max level already");
+                return;
+            }
+
+            pathLevel++;
+
+            pathSprite.spriteShape = pathSprites[pathLevel];
+
+            // to upgrade pathLevel
+            PathManager.OnPathUpgraded?.Invoke(this);
         }
-
-        pathLevel++;
-
-        pathSprite.spriteShape = pathSprites[pathLevel];
-
-        // to upgrade pathLevel
-        PathManager.OnPathUpgraded?.Invoke(this);
     }
 }
