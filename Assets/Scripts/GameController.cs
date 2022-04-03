@@ -117,11 +117,17 @@ public class GameController : MonoBehaviour
         UpdateUI();
     }
 
-    public void SpendFromBalance(int purchaseCost)
+    public bool SpendFromBalance(int purchaseCost)
     {
         if (_currentBalance - purchaseCost > 0)
         {
             _currentBalance -= purchaseCost;
+            UpdateUI();
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
     
