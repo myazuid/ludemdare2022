@@ -72,12 +72,19 @@ public class CharacterVisuals : MonoBehaviour
                 craftBobDown = !craftBobDown;
         }
 
-        if (lastPosition.x > transform.position.x)
+        lastPosition = transform.position;
+    }
+
+    private void FixedUpdate()
+    {
+        if (parentLastPosition.x > myParent.transform.position.x + .005f)
         {
             transform.localScale = new Vector3(-startingScale.x, startingScale.y, startingScale.z);
+        } else if (parentLastPosition.x < myParent.transform.position.x - .005f)
+        {
+            transform.localScale = new Vector3(startingScale.x, startingScale.y, startingScale.z);
         }
-
-        lastPosition = transform.position;
+        
         parentLastPosition = myParent.transform.position;
     }
 }
