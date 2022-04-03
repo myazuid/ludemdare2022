@@ -18,20 +18,15 @@ public class QueuingTester : MonoBehaviour
         for (int i = 0; i < 100;i++)
         {
             print("Running the " + i + "traveller spawn");
-            AddTravellerToTheQueue();
+            AddTravellerToTheQueue(i);
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void AddTravellerToTheQueue()
+    public void AddTravellerToTheQueue(int index)
     {
         var spawnPos = FindNextAvailableQueuePosition();
         var enemy = Instantiate(prefab, spawnPos, Quaternion.identity) as GameObject;
+        enemy.name = "Traveller " + index;
         enemies.Add(enemy);
     }
 
@@ -50,13 +45,22 @@ public class QueuingTester : MonoBehaviour
             while (!positionFound)
             {
                 // circumference of the circle
-                var circumference = 2 * Mathf.PI * circleRadius;
+                var circumference = Mathf.PI * circleRadius;
 
                 // the position in this circle that we're checking
                 var placeInThisCircle = i - numberOfPlacesInPreviousCircles;
 
                 // the position around this circle for this one
-                positionRoundCircle = circumference - (gapBetweenQueuingTravellers * placeInThisCircle);
+                float gap;
+                if (circleNumber > 0)
+                {
+                    gap = gapBetweenQueuingTravellers - (0.1f * circleNumber);
+                }
+                else
+                {
+                    gap = gapBetweenQueuingTravellers;
+                }
+                positionRoundCircle = circumference - (gap * placeInThisCircle);
 
                 if (positionRoundCircle < 0)
                 {
@@ -69,7 +73,6 @@ public class QueuingTester : MonoBehaviour
                     positionFound = true;
                 }
             }
-            print("Traveller " + i + " is in circle " + circleNumber + " position " + positionRoundCircle);
         }
 
         /* Get the vector direction */
@@ -79,7 +82,7 @@ public class QueuingTester : MonoBehaviour
         var spawnDir = new Vector2(horizontal, vertical);
         if (circleNumber > 0)
         {
-            spawnDir *= (circleNumber * 1.3f);
+            spawnDir += (spawnDir.normalized * gapBetweenQueuingCircles * circleNumber);
         }
         var spawnPos = (Vector2)transform.position + spawnDir;
 
