@@ -44,6 +44,9 @@ TagManager:
   - name: Ground
     uniqueID: 586415553
     locked: 0
+  - name: Path
+    uniqueID: 2270342575
+    locked: 0
   - name: Gates
     uniqueID: 1375334257
     locked: 0

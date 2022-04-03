@@ -7,13 +7,16 @@ public class PathManager : MonoBehaviour
 {
     public static PathManager instance;
 
-    public List<Path> pathList = new List<Path>();
+    public List<PathController> pathList = new List<PathController>();
 
-    [SerializeField] List<float> pathLevelSpeedMultiplier = new List<float>();
+    public List<float> pathLevelSpeedMultiplier = new List<float>();
 
     Transform gatesParent;
+    GameObject pathsParent;
 
-    public static Action OnPathUpgraded;
+    public static Action<PathController> OnPathUpgraded;
+
+    [SerializeField] private GameObject pathPrefab;
 
     private void Awake()
     {
@@ -29,13 +32,19 @@ public class PathManager : MonoBehaviour
 
     private void Start()
     {
+        if (pathPrefab == null)
+            Debug.LogError("pathPrefab is missing a prefab");
+
         gatesParent = GameObject.Find("Gates").transform;
 
-        GeneratePathList();
+        GeneratePaths();
     }
 
-    private void GeneratePathList()
+    private void GeneratePaths()
     {
+        pathsParent = new GameObject();
+        pathsParent.name = "Paths";
+
         for (int i = 0; i < gatesParent.childCount; i++)
         {
             for (int j = 0; j < gatesParent.childCount; j++)
@@ -50,13 +59,22 @@ public class PathManager : MonoBehaviour
 
                 // if the path isn't found in the list
                 if (ReturnPathLevel(firstGate,secondGate) == -1)
-                {
-                    pathList.Add(new Path(firstGate, secondGate));
+                {                    
+                    var newPath = Instantiate(pathPrefab, Vector2.zero,
+                        Quaternion.identity);
+                    newPath.transform.SetParent(pathsParent.transform);
+
+                    var newPathController = newPath.GetComponent<PathController>();
+
+                    newPathController.gate1 = firstGate;
+                    newPathController.gate2 = secondGate;
+                    newPathController.SetSpriteShapePathPoints();
+
+                    pathList.Add(newPathController);
                 }
             }
         }
     }
-
 
     public int ReturnPathLevel(
         GameObject _gateA, GameObject _gateB)
@@ -72,33 +90,19 @@ public class PathManager : MonoBehaviour
 
         return -1; // path not found
     }
-}
 
-[System.Serializable]
-public class Path
-{
-    public GameObject gate1; // one of the gates
-    public GameObject gate2; // the second gate
-    public int pathLevel; // the upgrade level (starts at 0)
-    public float pathSpeed; // between 0 and 1
-
-    public Path(GameObject _gate1, GameObject _gate2)
+    public PathController ReturnPathController(GameObject _gateA,
+        GameObject _gateB)
     {
-        gate1 = _gate1;
-        gate2 = _gate2;
-        pathLevel = 0;
-        pathSpeed = 1;
-    }
+        foreach (var path in pathList)
+        {
+            if (path.gate1 == _gateA && path.gate2 == _gateB ||
+                path.gate1 == _gateB && path.gate2 == _gateA)
+            {
+                return path;
+            }
+        }
 
-    public void SetPathSpeed(float _speed)
-    {
-        var clampedSpeed = Mathf.Clamp(_speed, 0, 1);
-        pathSpeed = clampedSpeed;
-    }
-
-    public void UpgradePath()
-    {
-        // to upgrade pathLevel
-        PathManager.OnPathUpgraded?.Invoke();
+        return null; // path not found
     }
 }
