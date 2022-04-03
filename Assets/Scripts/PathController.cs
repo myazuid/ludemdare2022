@@ -76,5 +76,8 @@ public class PathController : MonoBehaviour
 
         // to upgrade pathLevel
         PathManager.OnPathUpgraded?.Invoke(this);
+
+        GameController.instance.SpendFromBalance(
+            GameController.instance.pathUpgradeCosts[pathLevel]);
     }
 }

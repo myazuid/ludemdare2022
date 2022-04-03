@@ -8,6 +8,8 @@ using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
+    public static GameController instance;
+
     [SerializeField]
     private GameObject travellerPrefab;
     [SerializeField] 
@@ -35,6 +37,17 @@ public class GameController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _currentBalanceText;
     [SerializeField] private TextMeshProUGUI _currentApprovalRatingText;
 
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
 
     private void OnEnable()
     {
