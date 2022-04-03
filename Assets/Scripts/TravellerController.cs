@@ -33,6 +33,8 @@ public class TravellerController : MonoBehaviour
     // UPGRADE STUFF
     private PathController pathController;
 
+    private CharacterVisuals charVisuals;
+
     private void Start()
     {
         queuingPatienceDuration = Random.Range(minQueuingPatienceDuration,
@@ -44,6 +46,8 @@ public class TravellerController : MonoBehaviour
 
         pathController = PathManager.instance.ReturnPathController(startGate, endGate);
         SetSpeedBasedOnPathLevel(pathController.pathLevel);
+
+        charVisuals = transform.Find("Character").GetComponent<CharacterVisuals>();
     }
 
     private void OnEnable()
@@ -114,11 +118,14 @@ public class TravellerController : MonoBehaviour
     {
         endGateController.outboundTravellerQueue.Add(this.gameObject);
 
+        queuingPosition = endGateController.FindNextAvailableQueuePosition();
+        /*
         var queueStart = endGate.transform.Find("QueueStart").position;
         var xPos = queueStart.x + (queueDistanceFromNextTraveller *
             endGateController.outboundTravellerQueue.Count);
 
         queuingPosition = new Vector2(xPos, queueStart.y);
+        */
 
         travellerState = TravellerState.Queuing;
     }
@@ -134,7 +141,7 @@ public class TravellerController : MonoBehaviour
 
             if (dist < 0.001f)
             {
-                EnterQueue(endGate);
+                return;
             }
             else
             {
@@ -142,11 +149,6 @@ public class TravellerController : MonoBehaviour
                 frequencyToCheckProximityToEndGate;
             }
         }
-    }
-
-    private void EnterQueue(GameObject _endGate)
-    {
-        travellerState = TravellerState.Queuing;
     }
 
     private void CheckTravellerQueuingPatience()
@@ -168,7 +170,8 @@ public class TravellerController : MonoBehaviour
             if (unhappinessLevel != UnhappinessLevel.Unsatisfied)
             {
                 unhappinessLevel = UnhappinessLevel.Unsatisfied;
-                print(this.gameObject.name + " is unsatisfied.");
+                //print(this.gameObject.name + " is unsatisfied.");
+                charVisuals.setMoodlet(CharacterVisuals.MOODLET_STATE.SAD);
             }
 
         }
@@ -177,7 +180,8 @@ public class TravellerController : MonoBehaviour
             if (unhappinessLevel != UnhappinessLevel.Angry)
             {
                 unhappinessLevel = UnhappinessLevel.Angry;
-                print(this.gameObject.name + " is angry!");
+                //print(this.gameObject.name + " is angry!");
+                charVisuals.setMoodlet(CharacterVisuals.MOODLET_STATE.ANGRY);
             }
         }
         else
@@ -188,7 +192,7 @@ public class TravellerController : MonoBehaviour
 
     private void ExitQueueAndLeave(GameObject _endGate)
     {
-        print(this.gameObject.name + "says - Fuck this, I'm leaving!");
+        //print(this.gameObject.name + "says - Fuck this, I'm leaving!");
 
         //fire event to GameController to handle payments/remove traveller from global list
         GateController.OnTravellerProcessed?.Invoke(gameObject, false);
