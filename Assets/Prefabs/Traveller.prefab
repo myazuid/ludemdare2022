@@ -44,11 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea30dcb40cead4f04abdec17c0ff3a3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  travellerExitBeam: {fileID: 7163027256333648649, guid: 86039a557f774134d9aba267d3c53574, type: 3}
   startGate: {fileID: 0}
   endGate: {fileID: 0}
   baseTravellerSpeed: 1
   actualtravellerSpeed: 1
   thresholdDistanceToEnterQueue: 1
+  queueDistanceFromNextTraveller: 0.3
+  queuingPosition: {x: 0, y: 0}
   unhappinessLevel: 0
 --- !u!1001 &8318223925842970937
 PrefabInstance:

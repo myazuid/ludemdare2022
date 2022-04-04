@@ -192,9 +192,9 @@ public class GameController : MonoBehaviour
     {
         if (bigApprovalRatingLoss)
         {
-            _approvalRating -= _approvalRatingChangeBig;
+            _approvalRating -= _approvalRatingChangeBig * 2;
         }
-        else _approvalRating -= _approvalRatingChangeSmall;
+        else _approvalRating -= _approvalRatingChangeSmall * 2;
         
         _approvalRating = Mathf.Round(_approvalRating * 10f) / 10f;
         onApprovalChanged.Invoke(_approvalRating);

@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 public class TravellerController : MonoBehaviour
 {
+    public GameObject travellerExitBeam;
     public GameObject startGate, endGate;
     private GateController endGateController;
     Vector2 destination;
@@ -194,6 +195,8 @@ public class TravellerController : MonoBehaviour
             {
                 Destroy(this.gameObject);
             }
+
+            Instantiate(travellerExitBeam, transform.position, Quaternion.identity);
         }
     }
 

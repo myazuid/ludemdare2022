@@ -134,6 +134,7 @@ public class GateController : MonoBehaviour
                 gateLevel++;
                 //spriteRenderer.sprite = gateSprites[Mathf.Min(gateLevel, gateSprites.Length - 1)];
                 spriteRenderer.sprite = GameController.instance.gateLevels[gateLevel].sprite;
+                Instantiate(beamPrefab, transform.position, Quaternion.identity);
             }
         }   
     }
