@@ -17,8 +17,6 @@ public class ReviewsController : MonoBehaviour
     [SerializeField] private float reviewFrequencyInSeconds = 30f;
     public float reviewVisibleDuration = 10f;
 
-    private GameObject canvas;
-    
     public static event Action<int> OnReviewPosted;
     
     private void Awake()
