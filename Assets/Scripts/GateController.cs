@@ -23,7 +23,7 @@ public class GateController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gateNameText;
 
     float gapBetweenQueuingTravellers = 0.3f;
-    float gapBetweenQueuingCircles = 0.2f;
+    float gapBetweenQueuingCircles = 0.3f;
     float baseQueueRadius = 2;
 
     public GameObject beamPrefab;
