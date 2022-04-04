@@ -511,6 +511,7 @@ MonoBehaviour:
   fareCost: 5
   pathUpgradeCosts: 32000000fa000000f4010000
   gateUpgradeCosts: 32000000fa000000f4010000ee020000e8030000e2040000dc050000
+  _approvalRating: 0
   _totalProcessed: 0
 --- !u!4 &559852555
 Transform:
@@ -855,6 +856,58 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3425643389904951673, guid: c501d1487e510433fac28c112a28b595, type: 3}
   m_PrefabInstance: {fileID: 749741239}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1656452509
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1656452511}
+  - component: {fileID: 1656452510}
+  m_Layer: 0
+  m_Name: ReviewsController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1656452510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1656452509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33b6b5d71f1161245956fa02d4889f03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positiveReviewData: {fileID: 4900000, guid: 0b29fbab3f76ad94abbd68585e77eb29, type: 3}
+  neutralReviewData: {fileID: 4900000, guid: 42e7632429a9828418fe605ec5a4cc83, type: 3}
+  negativeReviewData: {fileID: 4900000, guid: 5761678969ece2646bbd313389b10016, type: 3}
+  timeBeforeFirstReviewInSeconds: 30
+  reviewFrequencyInSeconds: 30
+  reviews:
+    positive: []
+    neutral: []
+    negative: []
+--- !u!4 &1656452511
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1656452509}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1695600593
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,10 +1,15 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class UIController : MonoBehaviour
 {
+    [SerializeField] private GameObject[] reviewPanels;
+    
     public Text balanceChanged;
     public Text totalProcessed;
     public Image bar;
@@ -31,6 +36,8 @@ public class UIController : MonoBehaviour
         GameController.onBalanceChanged += OnBalanceChanged;
         GameController.onApprovalChanged += ONApprovalChanged;
         GameController.onTotalProcessedChanged += ONTotalProcessedChanged;
+        ReviewsController.OnReviewPosted += OnReviewPosted;
+        
     }
 
     private void ONTotalProcessedChanged(int obj)
@@ -63,4 +70,55 @@ public class UIController : MonoBehaviour
     {
         balanceChanged.text = amount.ToString();
     }
+
+    private void OnReviewPosted(int type)
+    {
+        //0 positive, 1 neutral, 2 negative.
+        switch (type)
+        {
+            case 0:
+                reviewPanels[type].transform.GetChild(0).GetComponent<Text>().text = ReviewsController.instance.reviews
+                    .positive[Random.Range(0, ReviewsController.instance.reviews.positive.Length)].name;
+                
+                reviewPanels[type].transform.GetChild(1).GetComponent<Text>().text = ReviewsController.instance.reviews
+                    .positive[Random.Range(0, ReviewsController.instance.reviews.positive.Length)].username;
+                
+                reviewPanels[type].transform.GetChild(2).GetComponent<Text>().text = ReviewsController.instance.reviews
+                    .positive[Random.Range(0, ReviewsController.instance.reviews.positive.Length)].message;
+                StartCoroutine(ShowReview(reviewPanels[type]));
+                break;
+            
+            case 1:
+                reviewPanels[type].transform.GetChild(0).GetComponent<Text>().text = ReviewsController.instance.reviews
+                    .neutral[Random.Range(0, ReviewsController.instance.reviews.neutral.Length)].name;
+                
+                reviewPanels[type].transform.GetChild(1).GetComponent<Text>().text = ReviewsController.instance.reviews
+                    .neutral[Random.Range(0, ReviewsController.instance.reviews.neutral.Length)].username;
+                
+                reviewPanels[type].transform.GetChild(2).GetComponent<Text>().text = ReviewsController.instance.reviews
+                    .neutral[Random.Range(0, ReviewsController.instance.reviews.neutral.Length)].message;
+                StartCoroutine(ShowReview(reviewPanels[type]));
+                break;
+            
+            case 2:
+                reviewPanels[type].transform.GetChild(0).GetComponent<Text>().text = ReviewsController.instance.reviews
+                    .negative[Random.Range(0, ReviewsController.instance.reviews.negative.Length)].name;
+                
+                reviewPanels[type].transform.GetChild(1).GetComponent<Text>().text = ReviewsController.instance.reviews
+                    .negative[Random.Range(0, ReviewsController.instance.reviews.negative.Length)].username;
+                
+                reviewPanels[type].transform.GetChild(2).GetComponent<Text>().text = ReviewsController.instance.reviews
+                    .negative[Random.Range(0, ReviewsController.instance.reviews.negative.Length)].message;
+                StartCoroutine(ShowReview(reviewPanels[type]));
+                break;
+        }
+    }
+
+    IEnumerator ShowReview(GameObject reviewPanelToShow)
+    {
+        reviewPanelToShow.SetActive(true);
+        yield return new WaitForSeconds(ReviewsController.instance.reviewVisibleDuration);
+        reviewPanelToShow.SetActive(false);
+    }
+    
 }

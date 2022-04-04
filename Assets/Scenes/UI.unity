@@ -1757,6 +1757,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b9c571c4cc4a91a0e456880ac57f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reviewVisibleDuration: 10
+  reviewPanels:
+  - {fileID: 1236447319}
+  - {fileID: 1986025665}
+  - {fileID: 1149491970}
   balanceChanged: {fileID: 1706064147}
   totalProcessed: {fileID: 1333018576}
   bar: {fileID: 2072268608}

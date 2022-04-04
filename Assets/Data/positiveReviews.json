@@ -1,0 +1,19 @@
+    {
+       "positive":[
+          {
+             "name":"Zaphod Beeblebrox",
+             "username":"@beeblebrox42",
+             "message":"The person running this joint must be one cool frood, if you're travelling anywhere, Stonehenge is your path."
+          },
+          {
+             "name":"Vaixons Zerai",
+             "username":"@theRealVaixons",
+             "message":"This place is so great, the smoothest transit I've had."
+          },
+          {
+             "name":"Koq'od of Zorb",
+             "username":"@zorbZorb",
+             "message":"Zorb declares journey has been a success. Zorb thanks you."
+          }
+       ]
+    }

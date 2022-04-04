@@ -26,7 +26,7 @@ public class GameController : MonoBehaviour
     private float _travellerSpawnRateInSeconds;
     private float _increaseDifficultyFrequencyInSeconds;
     private float _timeSinceLastSpawn;
-    private float _approvalRating;
+    public float _approvalRating;
     private float _approvalRatingChangeSmall, _approvalRatingChangeBig;
     [NonSerialized]
     public int _currentBalance;
