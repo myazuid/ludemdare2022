@@ -23,6 +23,8 @@ public class UIController : MonoBehaviour
 
     public GameObject tooltipContainer;
     public Text textTitle, textDescription;
+    public GameObject defeatContainer;
+    
     public static UIController instance;
 
     private void Awake()
@@ -169,6 +171,11 @@ public class UIController : MonoBehaviour
     public void hideTooltip()
     {
         tooltipContainer.SetActive(false);
+    }
+
+    public void showDefeatScreen()
+    {
+        defeatContainer.SetActive(true);
     }
 
     IEnumerator ShowReview(GameObject reviewPanelToShow)

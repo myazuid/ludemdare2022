@@ -12,6 +12,8 @@ public class MenuController : MonoBehaviour
 
     private void Awake()
     {
+        Time.timeScale = 1f;
+        
         for (int i = 0; i < 10; i++)
         {
             spawnDude();

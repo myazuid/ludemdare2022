@@ -43,6 +43,8 @@ public class GameController : MonoBehaviour
     
     private void Awake()
     {
+        Time.timeScale = 1f;
+
         if (instance == null)
         {
             instance = this;
@@ -221,6 +223,8 @@ public class GameController : MonoBehaviour
     private void EndGame()
     {
         Debug.LogWarning("You lose. Good day sir.");
+        UIController.instance.showDefeatScreen();
+        Time.timeScale = 0;
     }
 }
 
