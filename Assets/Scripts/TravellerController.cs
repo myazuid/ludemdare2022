@@ -22,7 +22,7 @@ public class TravellerController : MonoBehaviour
 
     // QUEUING STUFF
     float timeSpentQueuing = 0;
-    float minQueuingPatienceDuration = 10, maxQueuingPatienceDuration = 50;
+    float minQueuingPatienceDuration = 10, maxQueuingPatienceDuration = 30;
     float queuingPatienceDuration;
     public float queueDistanceFromNextTraveller = 0.3f;
     public Vector2 queuingPosition;
