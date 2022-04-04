@@ -61,13 +61,13 @@ MonoBehaviour:
     upgradeCost: 250
   - sprite: {fileID: 21300000, guid: 3b43c389946e9477fb247acd8b7d015d, type: 3}
     upgradeCost: 500
-  - sprite: {fileID: 21300000, guid: 1b2e764b0aed24de2ad11ae3b74cd062, type: 3}
+  - sprite: {fileID: 21300000, guid: f7e9e117f319c4337a18815e584eb5ad, type: 3}
     upgradeCost: 750
-  - sprite: {fileID: 21300000, guid: 6f07be682c84a44369ba82b5b255e2b8, type: 3}
+  - sprite: {fileID: 21300000, guid: 50cfa0e3030d646f1b9d4d6343f54444, type: 3}
     upgradeCost: 1000
-  - sprite: {fileID: 21300000, guid: dea40799b81b0486caf95b67eb4ded5f, type: 3}
+  - sprite: {fileID: 21300000, guid: 0d11805fb306a438784794d8535b2a24, type: 3}
     upgradeCost: 1250
-  - sprite: {fileID: 21300000, guid: 7cfd5cdd61592b340b1a9269e6316a13, type: 3}
+  - sprite: {fileID: 21300000, guid: adb1020337b6542c19d0dbcaa3bb120e, type: 3}
     upgradeCost: 1500
   _approvalRating: 0
   _totalProcessed: 0

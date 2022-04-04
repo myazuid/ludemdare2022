@@ -31,7 +31,7 @@ public class GateController : MonoBehaviour
 
     float gapBetweenQueuingTravellers = 0.3f;
     float gapBetweenQueuingCircles = 0.3f;
-    float baseQueueRadius = 2;
+    float baseQueueRadius = 2f; // used to be 2
 
     public GameObject beamPrefab;
 
