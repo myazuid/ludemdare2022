@@ -80,7 +80,7 @@ public class GateController : MonoBehaviour
 
     }
 
-    private void ProcessOutboundTraveller()
+    public void ProcessOutboundTraveller()
     {
         if (outboundTravellerQueue.Count == 0)
         {
