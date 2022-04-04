@@ -25,12 +25,16 @@ public class GateController : MonoBehaviour
     float gapBetweenQueuingCircles = 0.2f;
     float baseQueueRadius = 2;
 
+    public GameObject beamPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         gateNameText.text = GateSpawner.instance.ReturnUnusedWorldName();
+        PathManager.instance.GeneratePaths();
+        Instantiate(beamPrefab, transform.position, Quaternion.identity);
     }
 
     private void Update()

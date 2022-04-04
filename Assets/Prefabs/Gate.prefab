@@ -514,6 +514,7 @@ MonoBehaviour:
   outboundTravellerQueue: []
   beamEffect: {fileID: 7927849024953937190, guid: 2468bd54937c77a4b9cf15cc0a5b4c31, type: 3}
   gateNameText: {fileID: 7457622860071524445}
+  beamPrefab: {fileID: 4086418474941304773, guid: 0d1a73ebcd0077940b96b0da34e48982, type: 3}
 --- !u!58 &4308902098150987702
 CircleCollider2D:
   m_ObjectHideFlags: 0
