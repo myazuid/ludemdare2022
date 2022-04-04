@@ -107,10 +107,6 @@ MonoBehaviour:
   gate2: {fileID: 0}
   pathLevel: 0
   pathSpeed: 1
-  pathSprites:
-  - {fileID: 11400000, guid: 2d001f1ac191f4b4c9eea5858ee23bae, type: 2}
-  - {fileID: 11400000, guid: 51bc571eab33f4aa7bfeded9a1d6a8bd, type: 2}
-  - {fileID: 11400000, guid: 3017b629d1b0f451bbd10c886f0f9e22, type: 2}
 --- !u!114 &12419075939831568
 MonoBehaviour:
   m_ObjectHideFlags: 0

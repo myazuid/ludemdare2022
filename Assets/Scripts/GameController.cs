@@ -69,6 +69,8 @@ public class GameController : MonoBehaviour
             }
 
         }
+        
+        _approvalRating = 6f;
     }
 
     private void OnEnable()
@@ -84,7 +86,6 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         _travellers = new List<GameObject>();
-        _approvalRating = 5f;
         _approvalRatingChangeSmall = 0.1f;  // used to be 0.1f
         _approvalRatingRageExit = 1f;
         _approvalRatingChangeBig = 0.5f;

@@ -37,12 +37,14 @@ public class UIController : MonoBehaviour
     public GameObject defeatContainer;
     
     public static UIController instance;
+    private float startXSize;
     
 
     private void Awake()
     {
         instance = this;
         _rectTransform = bar.GetComponent<RectTransform>();
+        startXSize = _rectTransform.sizeDelta.x;
     }
 
     public void Start()
@@ -76,7 +78,7 @@ public class UIController : MonoBehaviour
     private void ONApprovalChanged(float obj)
     {
         float percentageRating = obj / 10f;
-        float scaledRating = Mathf.Lerp(0, 148, obj / 10f);
+        float scaledRating = Mathf.Lerp(0, startXSize, obj / 10f);
         _rectTransform.sizeDelta = new Vector2(scaledRating, 24);
         bar.color = Color.Lerp(badColor, goodColor, percentageRating);
 

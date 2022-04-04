@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,11 @@ public class PathController : MonoBehaviour
     {
         pathSprite = GetComponent<SpriteShapeController>();
         spriteShapeRenderer = GetComponent<SpriteShapeRenderer>();
+    }
+
+    private void Start()
+    {
+        SetSpriteShapePathPoints();
     }
 
     private void OnMouseDown()
@@ -72,6 +78,8 @@ public class PathController : MonoBehaviour
         var pos2 = new Vector2(gate2.transform.position.x,
             gate2.transform.position.y);
         pathSprite.spline.InsertPointAt(index++, pos2);
+        gameObject.SetActive(false);
+        gameObject.SetActive(true);
     }
 
     public void UpgradePath()
