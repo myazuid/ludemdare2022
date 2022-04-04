@@ -488,7 +488,7 @@ SpriteRenderer:
   m_SortingLayerID: 1375334257
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 648e61222388409428dba8bd617c7530, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 74c65602046794f58b92264600fcb764, type: 3}
   m_Color: {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -516,10 +516,6 @@ MonoBehaviour:
   gateLevel: 0
   gateNameText: {fileID: 7457622860071524445}
   beamPrefab: {fileID: 4086418474941304773, guid: 0d1a73ebcd0077940b96b0da34e48982, type: 3}
-  gateSprites:
-  - {fileID: 21300000, guid: 648e61222388409428dba8bd617c7530, type: 3}
-  - {fileID: 21300000, guid: fd6df35c0db130a40afe5bca0e0ca2c1, type: 3}
-  - {fileID: 21300000, guid: 7cfd5cdd61592b340b1a9269e6316a13, type: 3}
 --- !u!58 &4308902098150987702
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -178,7 +178,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9.052485
+  orthographic size: 5.902495
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1161,7 +1161,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1012592362}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 9.052485
+    OrthographicSize: 5.902495
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -1435,6 +1435,10 @@ PrefabInstance:
       propertyPath: gatesParent
       value: 
       objectReference: {fileID: 1764440992}
+    - target: {fileID: 384508300880568782, guid: 0a69f5ca3381749faad22b8069d58a48, type: 3}
+      propertyPath: gateLevels.Array.data[7].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3b43c389946e9477fb247acd8b7d015d, type: 3}
     - target: {fileID: 384508300880568783, guid: 0a69f5ca3381749faad22b8069d58a48, type: 3}
       propertyPath: m_RootOrder
       value: 7
