@@ -509,7 +509,7 @@ MonoBehaviour:
   travellerPrefab: {fileID: 3977359443929023188, guid: 4275cb39155d04cd1ae83228b1eac422, type: 3}
   gatesParent: {fileID: 1764440992}
   fareCost: 5
-  pathUpgradeCosts: 32000000fa000000f4010000
+  pathUpgradeCosts: 32000000fa000000
   gateUpgradeCosts: 32000000fa000000f4010000ee020000e8030000e2040000dc050000
   _approvalRating: 0
   _totalProcessed: 0
@@ -890,6 +890,7 @@ MonoBehaviour:
   negativeReviewData: {fileID: 4900000, guid: 5761678969ece2646bbd313389b10016, type: 3}
   timeBeforeFirstReviewInSeconds: 30
   reviewFrequencyInSeconds: 30
+  reviewVisibleDuration: 10
   reviews:
     positive: []
     neutral: []
@@ -951,7 +952,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1783a0cf850b4417b5603f5d7de1bde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  travellerPrefab: {fileID: 3977359443929023188, guid: 4275cb39155d04cd1ae83228b1eac422, type: 3}
 --- !u!4 &1733628248 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3425643389904951673, guid: c501d1487e510433fac28c112a28b595, type: 3}
