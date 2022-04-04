@@ -9,10 +9,16 @@ public class PathController : MonoBehaviour
     public GameObject gate2; // the second gate
     public int pathLevel = 0; // the upgrade level (starts at 0)
     public float pathSpeed = 1; // between 0 and 1
+    public int MaxPathLevel
+    {
+        get
+        {
+            return GameController.instance.pathLevels.Count - 1;
+        }
+    }
 
     private SpriteShapeController pathSprite;
     private SpriteShapeRenderer spriteShapeRenderer;
-    [SerializeField] List<SpriteShape> pathSprites = new List<SpriteShape>();
 
 
     private void Awake()
@@ -24,18 +30,24 @@ public class PathController : MonoBehaviour
     private void OnMouseDown()
     {
         UpgradePath();
+
+        UIController.instance.showTooltip(this); // to refresh it
     }
 
     private void OnMouseEnter()
     {
         spriteShapeRenderer.color = new Color(spriteShapeRenderer.color.r,
             spriteShapeRenderer.color.g, spriteShapeRenderer.color.b, 0.5f);
+        
+        UIController.instance.showTooltip(this);
     }
 
     private void OnMouseExit()
     {
         spriteShapeRenderer.color = new Color(spriteShapeRenderer.color.r,
             spriteShapeRenderer.color.g, spriteShapeRenderer.color.b, 1f);
+        
+        UIController.instance.hideTooltip();
     }
 
     public void SetPathSpeed(float _speed)
@@ -64,24 +76,20 @@ public class PathController : MonoBehaviour
 
     public void UpgradePath()
     {
-        if (pathLevel < pathSprites.Count - 1)
+        if (pathLevel < MaxPathLevel)
         {
             var success = GameController.instance.SpendFromBalance(
-            GameController.instance.pathUpgradeCosts[pathLevel]);
+            GameController.instance.pathLevels[pathLevel].upgradeCost);
             if (success)
             {
-                if (pathLevel == pathSprites.Count - 1)
-                {
-                    print("Max level already");
-                    return;
-                }
-
                 pathLevel++;
 
-                pathSprite.spriteShape = pathSprites[pathLevel];
+                pathSprite.spriteShape =
+                    GameController.instance.pathLevels[pathLevel].sprite;
 
                 // to upgrade pathLevel
                 PathManager.OnPathUpgraded?.Invoke(this);
+                UIController.instance.showTooltip(this);
             }
         }   
     }

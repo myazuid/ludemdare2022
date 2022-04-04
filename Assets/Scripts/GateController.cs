@@ -15,17 +15,26 @@ public class GateController : MonoBehaviour
 
     [SerializeField] private GameObject beamEffect;
 
-    private int gateLevel = 0;
+    [HideInInspector]
+    public int gateLevel = 0;
     private float timeOfNextGateProcessing = 0;
     private float gateProcessingFrequency = 1;
+    public int MaxGateLevel
+    {
+        get
+        {
+            return GameController.instance.gateLevels.Count - 1;
+        }
+    }
 
     [SerializeField] private TextMeshProUGUI gateNameText;
 
     float gapBetweenQueuingTravellers = 0.3f;
-    float gapBetweenQueuingCircles = 0.2f;
+    float gapBetweenQueuingCircles = 0.3f;
     float baseQueueRadius = 2;
 
     public GameObject beamPrefab;
+
 
     // Start is called before the first frame update
     void Start()
@@ -55,25 +64,28 @@ public class GateController : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (outboundTravellerQueue.Count > 0)
-        {
-            ProcessOutboundTraveller();
-        }
+        UpgradeGate();
+
+        UIController.instance.showTooltip(this); // to refresh it
     }
 
     private void OnMouseEnter()
     {
         spriteRenderer.color = new Color(spriteRenderer.color.r,
             spriteRenderer.color.g, spriteRenderer.color.b, 0.5f);
+        
+        UIController.instance.showTooltip(this);
+
     }
 
     private void OnMouseExit()
     {
         spriteRenderer.color = new Color(spriteRenderer.color.r,
             spriteRenderer.color.g, spriteRenderer.color.b, 1f);
+        UIController.instance.hideTooltip();
     }
 
-    private void ProcessOutboundTraveller()
+    public void ProcessOutboundTraveller()
     {
         if (outboundTravellerQueue.Count == 0)
         {
@@ -113,12 +125,17 @@ public class GateController : MonoBehaviour
 
     public void UpgradeGate()
     {
-        var success = GameController.instance.SpendFromBalance(
-            GameController.instance.gateUpgradeCosts[gateLevel]);
-        if (success)
+        if (gateLevel < MaxGateLevel)
         {
-            gateLevel++;
-        }        
+            var success = GameController.instance.SpendFromBalance(
+            GameController.instance.gateLevels[gateLevel].upgradeCost);
+            if (success)
+            {
+                gateLevel++;
+                //spriteRenderer.sprite = gateSprites[Mathf.Min(gateLevel, gateSprites.Length - 1)];
+                spriteRenderer.sprite = GameController.instance.gateLevels[gateLevel].sprite;
+            }
+        }   
     }
 
     public Vector2 FindNextAvailableQueuePosition()

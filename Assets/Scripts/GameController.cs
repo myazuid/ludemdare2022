@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
+using UnityEngine.U2D;
 
 public class GameController : MonoBehaviour
 {
@@ -17,11 +18,9 @@ public class GameController : MonoBehaviour
     private GameObject gatesParent;
     [SerializeField] 
     private int fareCost;
-    [SerializeField]
-    public List<int> pathUpgradeCosts = new List<int>();
-    [SerializeField]
-    public List<int> gateUpgradeCosts = new List<int>();
 
+    public List<PathLevel> pathLevels = new List<PathLevel>();
+    public List<GateLevel> gateLevels = new List<GateLevel>();
 
     private float _travellerSpawnRateInSeconds;
     private float _increaseDifficultyFrequencyInSeconds;
@@ -68,7 +67,7 @@ public class GameController : MonoBehaviour
     {
         _travellers = new List<GameObject>();
         _approvalRating = 10f;
-        _approvalRatingChangeSmall = 0.1f; 
+        _approvalRatingChangeSmall = 0.5f;  // used to be 0.1f
         _approvalRatingChangeBig = 0.5f;
         _travellerSpawnRateInSeconds = 0.5f;
         _increaseDifficultyFrequencyInSeconds = 30f;
@@ -143,7 +142,7 @@ public class GameController : MonoBehaviour
         if (_currentBalance - purchaseCost >= 0)
         {
             _currentBalance -= purchaseCost;
-            onBalanceChanged.Invoke(purchaseCost);
+            onBalanceChanged.Invoke(_currentBalance);
 
             return true;
         }
@@ -223,4 +222,18 @@ public class GameController : MonoBehaviour
     {
         Debug.LogWarning("You lose. Good day sir.");
     }
+}
+
+[Serializable]
+public class PathLevel
+{
+    public SpriteShape sprite;
+    public int upgradeCost;
+}
+
+[Serializable]
+public class GateLevel
+{
+    public Sprite sprite;
+    public int upgradeCost;
 }

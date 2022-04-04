@@ -21,8 +21,8 @@ public class TravellerController : MonoBehaviour
     private TravellerState travellerState = TravellerState.Travelling;
 
     // QUEUING STUFF
-    float timeSpentQueuing;
-    float minQueuingPatienceDuration = 10, maxQueuingPatienceDuration = 40;
+    float timeSpentQueuing = 0;
+    float minQueuingPatienceDuration = 10, maxQueuingPatienceDuration = 30;
     float queuingPatienceDuration;
     public float queueDistanceFromNextTraveller = 0.3f;
     public Vector2 queuingPosition;
@@ -63,6 +63,8 @@ public class TravellerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckTravellerQueuingPatience();
+
         if (travellerState == TravellerState.Travelling)
         {
             MoveTowardsDestination(destination);
@@ -70,7 +72,7 @@ public class TravellerController : MonoBehaviour
         else if (travellerState == TravellerState.Queuing)
         {
             MoveTowardsQueuePosition(queuingPosition);
-            CheckTravellerQueuingPatience();
+            //CheckTravellerQueuingPatience();
         }
     }
 
@@ -87,6 +89,11 @@ public class TravellerController : MonoBehaviour
         var speedMultiplier = PathManager.
                 instance.pathLevelSpeedMultiplier[_pathLevel];
         actualtravellerSpeed = baseTravellerSpeed * speedMultiplier;
+    }
+
+    private void ResetSpeedToDefault()
+    {
+        actualtravellerSpeed = baseTravellerSpeed;
     }
 
     private void MoveTowardsDestination(Vector2 _destination)
@@ -119,13 +126,8 @@ public class TravellerController : MonoBehaviour
         endGateController.outboundTravellerQueue.Add(this.gameObject);
 
         queuingPosition = endGateController.FindNextAvailableQueuePosition();
-        /*
-        var queueStart = endGate.transform.Find("QueueStart").position;
-        var xPos = queueStart.x + (queueDistanceFromNextTraveller *
-            endGateController.outboundTravellerQueue.Count);
 
-        queuingPosition = new Vector2(xPos, queueStart.y);
-        */
+        ResetSpeedToDefault();
 
         travellerState = TravellerState.Queuing;
     }
@@ -170,7 +172,6 @@ public class TravellerController : MonoBehaviour
             if (unhappinessLevel != UnhappinessLevel.Unsatisfied)
             {
                 unhappinessLevel = UnhappinessLevel.Unsatisfied;
-                //print(this.gameObject.name + " is unsatisfied.");
                 charVisuals.setMoodlet(CharacterVisuals.MOODLET_STATE.SAD);
             }
 
@@ -180,21 +181,24 @@ public class TravellerController : MonoBehaviour
             if (unhappinessLevel != UnhappinessLevel.Angry)
             {
                 unhappinessLevel = UnhappinessLevel.Angry;
-                //print(this.gameObject.name + " is angry!");
                 charVisuals.setMoodlet(CharacterVisuals.MOODLET_STATE.ANGRY);
             }
         }
         else
         {
-            ExitQueueAndLeave(endGate);
+            if (travellerState == TravellerState.Queuing)
+            {
+                ExitQueueAndLeave(endGate);
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
     }
 
     private void ExitQueueAndLeave(GameObject _endGate)
     {
-        //print(this.gameObject.name + "says - Fuck this, I'm leaving!");
-
-        //fire event to GameController to handle payments/remove traveller from global list
         GateController.OnTravellerProcessed?.Invoke(gameObject, false);
 
         var gateController = endGate.GetComponent<GateController>();

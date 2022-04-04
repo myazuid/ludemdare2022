@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 public class UIController : MonoBehaviour
 {
     [SerializeField] private GameObject[] reviewPanels;
-    
+
     public Text balanceChanged;
     public Text totalProcessed;
     public Image bar;
@@ -21,8 +21,13 @@ public class UIController : MonoBehaviour
     public Image satisfactionImage;
     public Sprite iconSad, iconNeutral, iconHappy;
 
+    public GameObject tooltipContainer;
+    public Text textTitle, textDescription;
+    public static UIController instance;
+
     private void Awake()
     {
+        instance = this;
         _rectTransform = bar.GetComponent<RectTransform>();
     }
 
@@ -37,7 +42,8 @@ public class UIController : MonoBehaviour
         GameController.onApprovalChanged += ONApprovalChanged;
         GameController.onTotalProcessedChanged += ONTotalProcessedChanged;
         ReviewsController.OnReviewPosted += OnReviewPosted;
-        
+
+        hideTooltip();
     }
 
     private void ONTotalProcessedChanged(int obj)
@@ -79,39 +85,70 @@ public class UIController : MonoBehaviour
             case 0:
                 reviewPanels[type].transform.GetChild(0).GetComponent<Text>().text = ReviewsController.instance.reviews
                     .positive[Random.Range(0, ReviewsController.instance.reviews.positive.Length)].name;
-                
+
                 reviewPanels[type].transform.GetChild(1).GetComponent<Text>().text = ReviewsController.instance.reviews
                     .positive[Random.Range(0, ReviewsController.instance.reviews.positive.Length)].username;
-                
+
                 reviewPanels[type].transform.GetChild(2).GetComponent<Text>().text = ReviewsController.instance.reviews
                     .positive[Random.Range(0, ReviewsController.instance.reviews.positive.Length)].message;
                 StartCoroutine(ShowReview(reviewPanels[type]));
                 break;
-            
+
             case 1:
                 reviewPanels[type].transform.GetChild(0).GetComponent<Text>().text = ReviewsController.instance.reviews
                     .neutral[Random.Range(0, ReviewsController.instance.reviews.neutral.Length)].name;
-                
+
                 reviewPanels[type].transform.GetChild(1).GetComponent<Text>().text = ReviewsController.instance.reviews
                     .neutral[Random.Range(0, ReviewsController.instance.reviews.neutral.Length)].username;
-                
+
                 reviewPanels[type].transform.GetChild(2).GetComponent<Text>().text = ReviewsController.instance.reviews
                     .neutral[Random.Range(0, ReviewsController.instance.reviews.neutral.Length)].message;
                 StartCoroutine(ShowReview(reviewPanels[type]));
                 break;
-            
+
             case 2:
                 reviewPanels[type].transform.GetChild(0).GetComponent<Text>().text = ReviewsController.instance.reviews
                     .negative[Random.Range(0, ReviewsController.instance.reviews.negative.Length)].name;
-                
+
                 reviewPanels[type].transform.GetChild(1).GetComponent<Text>().text = ReviewsController.instance.reviews
                     .negative[Random.Range(0, ReviewsController.instance.reviews.negative.Length)].username;
-                
+
                 reviewPanels[type].transform.GetChild(2).GetComponent<Text>().text = ReviewsController.instance.reviews
                     .negative[Random.Range(0, ReviewsController.instance.reviews.negative.Length)].message;
                 StartCoroutine(ShowReview(reviewPanels[type]));
                 break;
         }
+    }
+
+    public void showTooltip(GateController gateController) // for upgrades
+    {
+        tooltipContainer.SetActive(true);
+        textTitle.text = "Gateway";
+        textDescription.text = "Level " + gateController.gateLevel + " / " + (GameController.instance.gateLevels.Count-1) + "\n" +
+                               "Upgrade Cost: " + GameController.instance.gateLevels[gateController.gateLevel].upgradeCost + "\n" +
+                               "Automatically processes " + gateController.gateLevel + " travellers per second\n" +
+                                "Click to upgrade and increase traveller processing.";
+    }
+    
+    public void showTooltip(PathController pathController)
+    {
+        tooltipContainer.SetActive(true);
+        textTitle.text = "Path";
+        textDescription.text = "Level " + pathController.pathLevel + " / " + (GameController.instance.pathLevels.Count-1) + "\n" +
+                               "Upgrade Cost: " + GameController.instance.pathLevels[pathController.pathLevel].upgradeCost + "\n" +
+                               "Click to upgrade and increase speed of travellers";
+    }
+
+    public void showTooltip(GateProcessOutboundButton gateProcessOutboundButton)
+    {
+        tooltipContainer.SetActive(true);
+        textTitle.text = "Gateway";
+        textDescription.text = "Click to send travellers through";
+    }
+
+    public void hideTooltip()
+    {
+        tooltipContainer.SetActive(false);
     }
 
     IEnumerator ShowReview(GameObject reviewPanelToShow)
@@ -120,5 +157,4 @@ public class UIController : MonoBehaviour
         yield return new WaitForSeconds(ReviewsController.instance.reviewVisibleDuration);
         reviewPanelToShow.SetActive(false);
     }
-    
 }
