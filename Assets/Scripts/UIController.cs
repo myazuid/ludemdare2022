@@ -128,6 +128,7 @@ public class UIController : MonoBehaviour
         {
             textDescription.text = "Level " + gateController.gateLevel + " / " + (GameController.instance.gateLevels.Count - 1) + "\n" +
                                "Automatically processes " + gateController.gateLevel + " travellers per second\n" +
+                               "\n" +
                                "Max Level.";
         }
         else
@@ -146,7 +147,8 @@ public class UIController : MonoBehaviour
         if (pathController.pathLevel == pathController.MaxPathLevel)
         {
             textDescription.text = "Level " + pathController.pathLevel + " / " + (GameController.instance.pathLevels.Count - 1) + "\n" +
-                               "Max Level.";
+                "\n" +
+                "Max Level.";
         }
         else
         {
