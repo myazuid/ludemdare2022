@@ -15,7 +15,8 @@ public class GateController : MonoBehaviour
 
     [SerializeField] private GameObject beamEffect;
 
-    private int gateLevel = 0;
+    [HideInInspector]
+    public int gateLevel = 0;
     private float timeOfNextGateProcessing = 0;
     private float gateProcessingFrequency = 1;
 
@@ -66,12 +67,17 @@ public class GateController : MonoBehaviour
     {
         spriteRenderer.color = new Color(spriteRenderer.color.r,
             spriteRenderer.color.g, spriteRenderer.color.b, 0.5f);
+        
+        UIController.instance.showTooltip(this);
+
     }
 
     private void OnMouseExit()
     {
         spriteRenderer.color = new Color(spriteRenderer.color.r,
             spriteRenderer.color.g, spriteRenderer.color.b, 1f);
+        UIController.instance.hideTooltip();
+
     }
 
     private void ProcessOutboundTraveller()

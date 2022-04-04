@@ -12,7 +12,7 @@ public class PathController : MonoBehaviour
 
     private SpriteShapeController pathSprite;
     private SpriteShapeRenderer spriteShapeRenderer;
-    [SerializeField] List<SpriteShape> pathSprites = new List<SpriteShape>();
+    public List<SpriteShape> pathSprites = new List<SpriteShape>();
 
 
     private void Awake()
@@ -30,12 +30,16 @@ public class PathController : MonoBehaviour
     {
         spriteShapeRenderer.color = new Color(spriteShapeRenderer.color.r,
             spriteShapeRenderer.color.g, spriteShapeRenderer.color.b, 0.5f);
+        
+        UIController.instance.showTooltip(this);
     }
 
     private void OnMouseExit()
     {
         spriteShapeRenderer.color = new Color(spriteShapeRenderer.color.r,
             spriteShapeRenderer.color.g, spriteShapeRenderer.color.b, 1f);
+        
+        UIController.instance.hideTooltip();
     }
 
     public void SetPathSpeed(float _speed)
@@ -82,6 +86,7 @@ public class PathController : MonoBehaviour
 
                 // to upgrade pathLevel
                 PathManager.OnPathUpgraded?.Invoke(this);
+                UIController.instance.showTooltip(this);
             }
         }   
     }
