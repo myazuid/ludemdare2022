@@ -23,6 +23,7 @@ public class PathManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            gatesParent = GameObject.Find("Gates").transform;
         }
         else
         {
@@ -35,12 +36,11 @@ public class PathManager : MonoBehaviour
         if (pathPrefab == null)
             Debug.LogError("pathPrefab is missing a prefab");
 
-        gatesParent = GameObject.Find("Gates").transform;
 
         GeneratePaths();
     }
 
-    private void GeneratePaths()
+    public void GeneratePaths()
     {
         pathsParent = new GameObject();
         pathsParent.name = "Paths";
@@ -52,7 +52,7 @@ public class PathManager : MonoBehaviour
                 var firstGate = gatesParent.GetChild(i).gameObject;
                 var secondGate = gatesParent.GetChild(j).gameObject;
 
-                if (firstGate == secondGate)
+                if (firstGate == secondGate || !firstGate.activeSelf || !secondGate.activeSelf)
                 {
                     continue;
                 }

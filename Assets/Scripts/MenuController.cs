@@ -50,7 +50,7 @@ public class MenuController : MonoBehaviour
 
     public void startGame()
     {
-        SceneManager.LoadScene("Playtesting (2113UK)");
+        SceneManager.LoadScene("PrototypeNick - SpriteShapeTest 1");
     }
 
     public void options()

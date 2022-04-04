@@ -67,7 +67,7 @@ public class PathController : MonoBehaviour
         if (pathLevel < pathSprites.Count - 1)
         {
             var success = GameController.instance.SpendFromBalance(
-            GameController.instance.pathUpgradeCosts[pathLevel + 1]);
+            GameController.instance.pathUpgradeCosts[pathLevel]);
             if (success)
             {
                 if (pathLevel == pathSprites.Count - 1)

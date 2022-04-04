@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
@@ -27,16 +28,20 @@ public class GameController : MonoBehaviour
     private float _timeSinceLastSpawn;
     private float _approvalRating;
     private float _approvalRatingChangeSmall, _approvalRatingChangeBig;
-    private int _currentBalance;
+    [NonSerialized]
+    public int _currentBalance;
+
+    public int _totalProcessed;
     
     
     private List<GameObject> _travellers;
-    
-    //temp UI stuff
-    [Header("TEMP UI STUFF")]
-    [SerializeField] private TextMeshProUGUI _currentBalanceText;
-    [SerializeField] private TextMeshProUGUI _currentApprovalRatingText;
 
+    private float timeTillNextGate = 30f;
+
+    public static Action<int> onBalanceChanged;
+    public static Action<float> onApprovalChanged;
+    public static Action<int> onTotalProcessedChanged;
+    
     private void Awake()
     {
         if (instance == null)
@@ -69,15 +74,25 @@ public class GameController : MonoBehaviour
         _increaseDifficultyFrequencyInSeconds = 30f;
 
         InvokeRepeating(nameof(UpdateSpawnRate), _increaseDifficultyFrequencyInSeconds, _increaseDifficultyFrequencyInSeconds);
-        
-        //temp UI stuff
-        _currentBalanceText.text = "$" + _currentBalance;
-        _currentApprovalRatingText.text = "Approval Rating: " + _approvalRating;
     }
 
     private void Update()
     {
         _timeSinceLastSpawn += Time.deltaTime;
+        timeTillNextGate -= Time.deltaTime;
+
+        if (timeTillNextGate <= 0)
+        {
+            timeTillNextGate = 30;
+            for (int i = 0; i < gatesParent.transform.childCount; i++)
+            {
+                if (!gatesParent.transform.GetChild(i).gameObject.activeSelf)
+                {
+                    gatesParent.transform.GetChild(i).gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
 
         if (_timeSinceLastSpawn >= _travellerSpawnRateInSeconds)
         {
@@ -88,18 +103,24 @@ public class GameController : MonoBehaviour
 
     private void UpdateSpawnRate()
     {
-        _travellerSpawnRateInSeconds -= 0.05f;
+        _travellerSpawnRateInSeconds *= .75f;
         _travellerSpawnRateInSeconds = Mathf.Round(_travellerSpawnRateInSeconds * 100f) / 100f;
-    }
+        _travellerSpawnRateInSeconds = Mathf.Clamp(_travellerSpawnRateInSeconds, .025f, 10f);
+;    }
 
     private void SpawnTraveller()
     {
-        int startGate = Random.Range(0, gatesParent.transform.childCount);
+        int startGate;
+        do
+        {
+            startGate = Random.Range(0, gatesParent.transform.childCount);
+        } while (!gatesParent.transform.GetChild(startGate).gameObject.activeSelf);
+
         int endGate;
         do
         {
             endGate = Random.Range(0, gatesParent.transform.childCount);
-        } while (endGate == startGate);
+        } while (endGate == startGate || !gatesParent.transform.GetChild(endGate).gameObject.activeSelf);
 
         var traveller = Instantiate(travellerPrefab, gatesParent.transform.GetChild(startGate).position, quaternion.identity);
         
@@ -114,29 +135,22 @@ public class GameController : MonoBehaviour
     public void AddToBalance()
     {
         _currentBalance += fareCost;
-        UpdateUI();
+        onBalanceChanged.Invoke(_currentBalance);
     }
 
     public bool SpendFromBalance(int purchaseCost)
     {
-        if (_currentBalance - purchaseCost > 0)
+        if (_currentBalance - purchaseCost >= 0)
         {
             _currentBalance -= purchaseCost;
-            UpdateUI();
+            onBalanceChanged.Invoke(purchaseCost);
+
             return true;
         }
         else
         {
             return false;
         }
-    }
-    
-    private void UpdateUI()
-    {
-        //Temp UI stuff
-        _currentBalanceText.text = "$" + _currentBalance;
-        _currentApprovalRatingText.text = "Approval Rating: " + _approvalRating;
-        
     }
 
     private void FinishTravellerProcessing(GameObject travellerObject, bool transitedSuccessfully)
@@ -146,6 +160,8 @@ public class GameController : MonoBehaviour
         {
             AddToBalance();
             RaiseApprovalRating(false);
+            _totalProcessed++;
+            onTotalProcessedChanged.Invoke(_totalProcessed);
         }
         else LowerApprovalRating(false);
     }
@@ -165,7 +181,7 @@ public class GameController : MonoBehaviour
         }
         
         _approvalRating = Mathf.Round(_approvalRating * 10f) / 10f;
-        UpdateUI();
+        onApprovalChanged.Invoke(_approvalRating);
     }
 
     private void LowerApprovalRating(bool bigApprovalRatingLoss)
@@ -177,7 +193,7 @@ public class GameController : MonoBehaviour
         else _approvalRating -= _approvalRatingChangeSmall;
         
         _approvalRating = Mathf.Round(_approvalRating * 10f) / 10f;
-        UpdateUI();
+        onApprovalChanged.Invoke(_approvalRating);
         
         if (_approvalRating <= 0f)
         {

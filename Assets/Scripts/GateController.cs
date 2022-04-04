@@ -25,12 +25,16 @@ public class GateController : MonoBehaviour
     float gapBetweenQueuingCircles = 0.2f;
     float baseQueueRadius = 2;
 
+    public GameObject beamPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         gateNameText.text = GateSpawner.instance.ReturnUnusedWorldName();
+        PathManager.instance.GeneratePaths();
+        Instantiate(beamPrefab, transform.position, Quaternion.identity);
     }
 
     private void Update()
@@ -71,6 +75,11 @@ public class GateController : MonoBehaviour
 
     private void ProcessOutboundTraveller()
     {
+        if (outboundTravellerQueue.Count == 0)
+        {
+            return;
+        }
+        
         var processedTraveller = outboundTravellerQueue[0];
 
         outboundTravellerQueue.RemoveAt(0);
@@ -79,23 +88,9 @@ public class GateController : MonoBehaviour
 
         Destroy(processedTraveller);
 
-        // shift the remaining ones
-        /*
-        foreach (var traveller in outboundTravellerQueue)
-        {
-            var travellerController = traveller.GetComponent<TravellerController>();
-            travellerController.queuingPosition =
-                new Vector2(travellerController.queuingPosition.x -
-                travellerController.queueDistanceFromNextTraveller,
-                travellerController.queuingPosition.y);
-        }
-        */
-
         for (int i = 0; i < outboundTravellerQueue.Count; i++)
         {
             var traveller = outboundTravellerQueue[i].GetComponent<TravellerController>();
-            //traveller.queuingPosition = new Vector2(traveller.queuingPosition.x -
-            //    traveller.queueDistanceFromNextTraveller, traveller.queuingPosition.y);
             traveller.queuingPosition = FindQueuePositionAtIndex(i);
         }
 
@@ -109,12 +104,9 @@ public class GateController : MonoBehaviour
 
         outboundTravellerQueue.Remove(_traveller);
 
-        //for (int i = index; i < outboundTravellerQueue.Count; i++)
         for (int i = 0; i < outboundTravellerQueue.Count; i++)
         {
             var traveller = outboundTravellerQueue[i].GetComponent<TravellerController>();
-            //traveller.queuingPosition = new Vector2(traveller.queuingPosition.x -
-            //    traveller.queueDistanceFromNextTraveller, traveller.queuingPosition.y);
             traveller.queuingPosition = FindQueuePositionAtIndex(i);
         }
     }
@@ -122,7 +114,7 @@ public class GateController : MonoBehaviour
     public void UpgradeGate()
     {
         var success = GameController.instance.SpendFromBalance(
-            GameController.instance.gateUpgradeCosts[gateLevel + 1]);
+            GameController.instance.gateUpgradeCosts[gateLevel]);
         if (success)
         {
             gateLevel++;
