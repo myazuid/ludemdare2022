@@ -34,6 +34,9 @@ public class GameController : MonoBehaviour
     public int _currentBalance;
 
     public int _totalProcessed;
+
+    private float surgeDelay = 5f;
+    private int surgeCount;
     
     
     private List<GameObject> _travellers;
@@ -115,7 +118,39 @@ public class GameController : MonoBehaviour
             SpawnTraveller();
             _timeSinceLastSpawn = 0f;
         }
+
+        surgeDelay -= Time.deltaTime;
+        if (surgeDelay <= 0)
+        {
+            int startGate;
+            do
+            {
+                startGate = Random.Range(0, gatesParent.transform.childCount);
+            } while (!gatesParent.transform.GetChild(startGate).gameObject.activeSelf);
+
+            int endGate;
+            do
+            {
+                endGate = Random.Range(0, gatesParent.transform.childCount);
+            } while (endGate == startGate || !gatesParent.transform.GetChild(endGate).gameObject.activeSelf);
+
+
+            StartCoroutine(SurgeTraveller(startGate, endGate, Random.Range(3 + surgeCount/2, 3 + surgeCount)));
+            surgeCount++;
+            surgeDelay = Random.Range(15f, 30f);
+        }
     }
+    
+    IEnumerator SurgeTraveller(int start, int end, int count)
+    {
+        Debug.Log("Surge!: " + count);
+        for (int i = 0; i < count; i++)
+        {
+            SpawnTraveller(start, end);
+            yield return new WaitForSeconds(.3f);
+        }
+    }
+    
 
     private void UpdateSpawnRate()
     {
@@ -124,19 +159,25 @@ public class GameController : MonoBehaviour
         _travellerSpawnRateInSeconds = Mathf.Clamp(_travellerSpawnRateInSeconds, .025f, 10f);
 ;    }
 
-    private void SpawnTraveller()
+    private void SpawnTraveller(int startGateA = -1, int startGateB = -1)
     {
-        int startGate;
-        do
+        int startGate = startGateA;
+        if (startGateA == -1)
         {
-            startGate = Random.Range(0, gatesParent.transform.childCount);
-        } while (!gatesParent.transform.GetChild(startGate).gameObject.activeSelf);
+            do
+            {
+                startGate = Random.Range(0, gatesParent.transform.childCount);
+            } while (!gatesParent.transform.GetChild(startGate).gameObject.activeSelf);
+        }
 
-        int endGate;
-        do
+        int endGate = startGateB;
+        if (startGateB == -1)
         {
-            endGate = Random.Range(0, gatesParent.transform.childCount);
-        } while (endGate == startGate || !gatesParent.transform.GetChild(endGate).gameObject.activeSelf);
+            do
+            {
+                endGate = Random.Range(0, gatesParent.transform.childCount);
+            } while (endGate == startGate || !gatesParent.transform.GetChild(endGate).gameObject.activeSelf);
+        }
 
         var traveller = Instantiate(travellerPrefab, gatesParent.transform.GetChild(startGate).position, quaternion.identity);
         
