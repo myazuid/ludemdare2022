@@ -140,7 +140,7 @@ public class GameController : MonoBehaviour
             spawnAmount = Mathf.Min(spawnAmount, 20);
             StartCoroutine(SurgeTraveller(startGate, endGate, spawnAmount));
             surgeCount+=2;
-            surgeDelay = Random.Range(15f, 30f);
+            surgeDelay = Random.Range(7f, 20f);
         }
     }
     
