@@ -42,6 +42,8 @@ public class UIController : MonoBehaviour
         GameController.onApprovalChanged += ONApprovalChanged;
         GameController.onTotalProcessedChanged += ONTotalProcessedChanged;
         ReviewsController.OnReviewPosted += OnReviewPosted;
+
+        hideTooltip();
     }
 
     private void ONTotalProcessedChanged(int obj)
