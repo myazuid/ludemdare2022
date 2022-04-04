@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour
 
     public int _totalProcessed;
 
-    private float surgeDelay = 5f;
+    private float surgeDelay = 20f;
     private int surgeCount;
     
     
@@ -135,15 +135,16 @@ public class GameController : MonoBehaviour
             } while (endGate == startGate || !gatesParent.transform.GetChild(endGate).gameObject.activeSelf);
 
 
-            StartCoroutine(SurgeTraveller(startGate, endGate, Random.Range(3 + surgeCount/2, 3 + surgeCount)));
-            surgeCount++;
+            int spawnAmount = Random.Range(3 + surgeCount / 2, 3 + surgeCount);
+            spawnAmount = Mathf.Min(spawnAmount, 20);
+            StartCoroutine(SurgeTraveller(startGate, endGate, spawnAmount));
+            surgeCount+=2;
             surgeDelay = Random.Range(15f, 30f);
         }
     }
     
     IEnumerator SurgeTraveller(int start, int end, int count)
     {
-        Debug.Log("Surge!: " + count);
         for (int i = 0; i < count; i++)
         {
             SpawnTraveller(start, end);
