@@ -26,6 +26,7 @@ public class GateController : MonoBehaviour
     float baseQueueRadius = 2;
 
     public GameObject beamPrefab;
+    public Sprite[] gateSprites;
 
     // Start is called before the first frame update
     void Start()
@@ -118,6 +119,7 @@ public class GateController : MonoBehaviour
         if (success)
         {
             gateLevel++;
+            spriteRenderer.sprite = gateSprites[Mathf.Min(gateLevel, gateSprites.Length-1)];
         }        
     }
 
