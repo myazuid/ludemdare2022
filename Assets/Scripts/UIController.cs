@@ -124,19 +124,37 @@ public class UIController : MonoBehaviour
     {
         tooltipContainer.SetActive(true);
         textTitle.text = "Gateway";
-        textDescription.text = "Level " + gateController.gateLevel + " / " + (GameController.instance.gateLevels.Count-1) + "\n" +
-                               "Upgrade Cost: " + GameController.instance.gateLevels[gateController.gateLevel].upgradeCost + "\n" +
+        if (gateController.gateLevel == gateController.MaxGateLevel)
+        {
+            textDescription.text = "Level " + gateController.gateLevel + " / " + (GameController.instance.gateLevels.Count - 1) + "\n" +
                                "Automatically processes " + gateController.gateLevel + " travellers per second\n" +
-                                "Click to upgrade and increase traveller processing.";
+                               "Max Level.";
+        }
+        else
+        {
+            textDescription.text = "Level " + gateController.gateLevel + " / " + (GameController.instance.gateLevels.Count - 1) + "\n" +
+                   "Upgrade Cost: " + GameController.instance.gateLevels[gateController.gateLevel].upgradeCost + "\n" +
+                   "Automatically processes " + gateController.gateLevel + " travellers per second\n" +
+                    "Click to upgrade and increase traveller processing.";
+        }
     }
     
     public void showTooltip(PathController pathController)
     {
         tooltipContainer.SetActive(true);
         textTitle.text = "Path";
-        textDescription.text = "Level " + pathController.pathLevel + " / " + (GameController.instance.pathLevels.Count-1) + "\n" +
+        if (pathController.pathLevel == pathController.MaxPathLevel)
+        {
+            textDescription.text = "Level " + pathController.pathLevel + " / " + (GameController.instance.pathLevels.Count - 1) + "\n" +
+                               "Max Level.";
+        }
+        else
+        {
+            textDescription.text = "Level " + pathController.pathLevel + " / " + (GameController.instance.pathLevels.Count - 1) + "\n" +
                                "Upgrade Cost: " + GameController.instance.pathLevels[pathController.pathLevel].upgradeCost + "\n" +
                                "Click to upgrade and increase speed of travellers";
+        }
+        
     }
 
     public void showTooltip(GateProcessOutboundButton gateProcessOutboundButton)
