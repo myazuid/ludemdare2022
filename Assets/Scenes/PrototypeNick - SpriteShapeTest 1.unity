@@ -510,7 +510,7 @@ MonoBehaviour:
   gatesParent: {fileID: 1764440992}
   fareCost: 5
   pathUpgradeCosts: 32000000fa000000
-  gateUpgradeCosts: 32000000fa000000f4010000ee020000e8030000e2040000dc050000
+  gateUpgradeCosts: 32000000fa000000f4010000
   _approvalRating: 0
   _totalProcessed: 0
 --- !u!4 &559852555
