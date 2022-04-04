@@ -73,8 +73,11 @@ public class GateController : MonoBehaviour
     {
         spriteRenderer.color = new Color(spriteRenderer.color.r,
             spriteRenderer.color.g, spriteRenderer.color.b, 0.5f);
-        
-        UIController.instance.showTooltip(this);
+
+        if (UIController.instance)
+        {
+            UIController.instance.showTooltip(this);
+        }
 
     }
 
