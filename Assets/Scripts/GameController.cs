@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour
     [SerializeField] 
     private int fareCost;
 
+    public GameObject beamTravellerSpawn;
     public List<PathLevel> pathLevels = new List<PathLevel>();
     public List<GateLevel> gateLevels = new List<GateLevel>();
 
@@ -129,6 +130,8 @@ public class GameController : MonoBehaviour
             gatesParent.transform.GetChild(startGate).gameObject; 
         traveller.GetComponent<TravellerController>().endGate =
             gatesParent.transform.GetChild(endGate).gameObject;
+
+        Instantiate(beamTravellerSpawn, traveller.transform.position, Quaternion.identity);
 
         AddTravellerToTotalCount(traveller);
     }

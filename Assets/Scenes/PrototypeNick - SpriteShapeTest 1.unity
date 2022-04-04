@@ -1436,6 +1436,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1764440992}
     - target: {fileID: 384508300880568782, guid: 0a69f5ca3381749faad22b8069d58a48, type: 3}
+      propertyPath: beamTravellerSpawn
+      value: 
+      objectReference: {fileID: 7878110086127918338, guid: 10b8e4c607961e0468823dd809da6bbb, type: 3}
+    - target: {fileID: 384508300880568782, guid: 0a69f5ca3381749faad22b8069d58a48, type: 3}
       propertyPath: gateLevels.Array.data[7].sprite
       value: 
       objectReference: {fileID: 21300000, guid: 3b43c389946e9477fb247acd8b7d015d, type: 3}
