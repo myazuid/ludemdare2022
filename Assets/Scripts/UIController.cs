@@ -9,6 +9,17 @@ using Random = UnityEngine.Random;
 public class UIController : MonoBehaviour
 {
     [SerializeField] private GameObject[] reviewPanels;
+    [SerializeField] private GameObject tutorialContainer;
+    [SerializeField] private Text tutorialTitleText, tutorialBodyText;
+    [SerializeField] private float tutorialNotificationDurationInSeconds;
+
+    private bool _negativeReviewTutorial,
+        _firstAngryAlienTutorial,
+        _firstPathTutorial,
+        _firstUpgradeTutorial,
+        _firstTravellerSpawnTutorial,
+        _firstGateArrivalTutorial,
+        _gameStartTutorial;
 
     public Text balanceChanged;
     public Text totalProcessed;
@@ -26,6 +37,7 @@ public class UIController : MonoBehaviour
     public GameObject defeatContainer;
     
     public static UIController instance;
+    
 
     private void Awake()
     {
@@ -46,6 +58,14 @@ public class UIController : MonoBehaviour
         ReviewsController.OnReviewPosted += OnReviewPosted;
 
         hideTooltip();
+
+        ShowTutorial(this);
+    }
+
+    private void ShowTutorial(UIController uiController)
+    {
+        tutorialNotificationDurationInSeconds = 0f;
+        
     }
 
     private void ONTotalProcessedChanged(int obj)
@@ -186,5 +206,27 @@ public class UIController : MonoBehaviour
         reviewPanelToShow.SetActive(true);
         yield return new WaitForSeconds(ReviewsController.instance.reviewVisibleDuration);
         reviewPanelToShow.SetActive(false);
+    }
+
+    private void ResetTimescale()
+    {
+        if (Time.timeScale == 0)
+        {
+            Time.timeScale = 1f;
+        }
+        else Time.timeScale = 0f;
+    }
+
+    private void Update()
+    {
+        if (Time.timeScale == 0)
+        {
+            tutorialNotificationDurationInSeconds += Time.deltaTime;
+        }
+
+        if (tutorialNotificationDurationInSeconds >= 8f)
+        {
+            ResetTimescale();
+        }
     }
 }
