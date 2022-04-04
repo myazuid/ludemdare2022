@@ -119,13 +119,6 @@ public class TravellerController : MonoBehaviour
         endGateController.outboundTravellerQueue.Add(this.gameObject);
 
         queuingPosition = endGateController.FindNextAvailableQueuePosition();
-        /*
-        var queueStart = endGate.transform.Find("QueueStart").position;
-        var xPos = queueStart.x + (queueDistanceFromNextTraveller *
-            endGateController.outboundTravellerQueue.Count);
-
-        queuingPosition = new Vector2(xPos, queueStart.y);
-        */
 
         travellerState = TravellerState.Queuing;
     }
