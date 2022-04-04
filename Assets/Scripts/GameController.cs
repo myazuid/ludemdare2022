@@ -67,7 +67,7 @@ public class GameController : MonoBehaviour
     {
         _travellers = new List<GameObject>();
         _approvalRating = 10f;
-        _approvalRatingChangeSmall = 0.1f; 
+        _approvalRatingChangeSmall = 0.5f;  // used to be 0.1f
         _approvalRatingChangeBig = 0.5f;
         _travellerSpawnRateInSeconds = 0.5f;
         _increaseDifficultyFrequencyInSeconds = 30f;
