@@ -105,7 +105,7 @@ public class GameController : MonoBehaviour
     {
         _travellerSpawnRateInSeconds *= .75f;
         _travellerSpawnRateInSeconds = Mathf.Round(_travellerSpawnRateInSeconds * 100f) / 100f;
-        _travellerSpawnRateInSeconds = Mathf.Clamp(_travellerSpawnRateInSeconds, .05f, 10f);
+        _travellerSpawnRateInSeconds = Mathf.Clamp(_travellerSpawnRateInSeconds, .025f, 10f);
 ;    }
 
     private void SpawnTraveller()
