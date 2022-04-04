@@ -145,7 +145,7 @@ GameObject:
   - component: {fileID: 5892958894958560286}
   - component: {fileID: 5589690895222897289}
   - component: {fileID: 2614122160583186710}
-  - component: {fileID: 1487147988824686720}
+  - component: {fileID: 8842076632506596589}
   m_Layer: 0
   m_Name: ProcessTravellerSprite
   m_TagString: Untagged
@@ -234,7 +234,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.49999997
---- !u!114 &1487147988824686720
+--- !u!114 &8842076632506596589
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -243,7 +243,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3295845528603907422}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0177da584a0b74feabc89e1b47871e84, type: 3}
+  m_Script: {fileID: 11500000, guid: 443d9fd48d8314998bd5e6e081d6b52d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3425643388632911791

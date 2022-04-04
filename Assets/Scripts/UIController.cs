@@ -118,13 +118,14 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void showTooltip(GateController gateController)
+    public void showTooltip(GateController gateController) // for upgrades
     {
         tooltipContainer.SetActive(true);
         textTitle.text = "Gateway";
         textDescription.text = "Level " + gateController.gateLevel + " / " + gateController.gateSprites.Length + "\n" +
                                "Upgrade Cost: " + GameController.instance.gateUpgradeCosts[gateController.gateLevel] + "\n" +
-                               "Click to send travellers through\nAutomatically processes " + gateController.gateLevel + " travellers per second\nClick Icon to upgrade";
+                               "Automatically processes " + gateController.gateLevel + " travellers per second\n" +
+                                "Click to upgrade and increase traveller processing.";
     }
     
     public void showTooltip(PathController pathController)
@@ -134,6 +135,13 @@ public class UIController : MonoBehaviour
         textDescription.text = "Level " + pathController.pathLevel + " / " + pathController.pathSprites.Count + "\n" +
                                "Upgrade Cost: " + GameController.instance.pathUpgradeCosts[pathController.pathLevel] + "\n" +
                                "Click to upgrade and increase speed of travellers";
+    }
+
+    public void showTooltip(GateProcessOutboundButton gateProcessOutboundButton)
+    {
+        tooltipContainer.SetActive(true);
+        textTitle.text = "Gateway";
+        textDescription.text = "Click to send travellers through";
     }
 
     public void hideTooltip()
