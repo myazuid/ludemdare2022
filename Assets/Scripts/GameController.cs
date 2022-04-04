@@ -89,8 +89,8 @@ public class GameController : MonoBehaviour
         _approvalRatingChangeSmall = 0.1f;  // used to be 0.1f
         _approvalRatingRageExit = 1f;
         _approvalRatingChangeBig = 0.5f;
-        _travellerSpawnRateInSeconds = 0.5f;
-        _increaseDifficultyFrequencyInSeconds = 30f;
+        _travellerSpawnRateInSeconds = 2f;
+        _increaseDifficultyFrequencyInSeconds = 15f;
 
         InvokeRepeating(nameof(UpdateSpawnRate), _increaseDifficultyFrequencyInSeconds, _increaseDifficultyFrequencyInSeconds);
     }
@@ -102,7 +102,7 @@ public class GameController : MonoBehaviour
 
         if (timeTillNextGate <= 0)
         {
-            timeTillNextGate = 30;
+            timeTillNextGate = 45;
             for (int i = 0; i < gatesParent.transform.childCount; i++)
             {
                 if (!gatesParent.transform.GetChild(i).gameObject.activeSelf)
@@ -117,7 +117,7 @@ public class GameController : MonoBehaviour
         if (_timeSinceLastSpawn >= _travellerSpawnRateInSeconds)
         {
             SpawnTraveller();
-            _timeSinceLastSpawn = 0f;
+            _timeSinceLastSpawn = Random.Range(0, -_travellerSpawnRateInSeconds/2f);
         }
 
         surgeDelay -= Time.deltaTime;
