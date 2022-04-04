@@ -175,7 +175,10 @@ public class UIController : MonoBehaviour
 
     public void showDefeatScreen()
     {
-        defeatContainer.SetActive(true);
+        if (defeatContainer != null)
+        {
+            defeatContainer.SetActive(true);
+        }
     }
 
     IEnumerator ShowReview(GameObject reviewPanelToShow)
