@@ -122,8 +122,8 @@ public class UIController : MonoBehaviour
     {
         tooltipContainer.SetActive(true);
         textTitle.text = "Gateway";
-        textDescription.text = "Level " + gateController.gateLevel + " / " + gateController.gateSprites.Length + "\n" +
-                               "Upgrade Cost: " + GameController.instance.gateUpgradeCosts[gateController.gateLevel] + "\n" +
+        textDescription.text = "Level " + gateController.gateLevel + " / " + (GameController.instance.gateLevels.Count-1) + "\n" +
+                               "Upgrade Cost: " + GameController.instance.gateLevels[gateController.gateLevel].upgradeCost + "\n" +
                                "Automatically processes " + gateController.gateLevel + " travellers per second\n" +
                                 "Click to upgrade and increase traveller processing.";
     }
@@ -132,8 +132,8 @@ public class UIController : MonoBehaviour
     {
         tooltipContainer.SetActive(true);
         textTitle.text = "Path";
-        textDescription.text = "Level " + pathController.pathLevel + " / " + pathController.pathSprites.Count + "\n" +
-                               "Upgrade Cost: " + GameController.instance.pathUpgradeCosts[pathController.pathLevel] + "\n" +
+        textDescription.text = "Level " + pathController.pathLevel + " / " + (GameController.instance.pathLevels.Count-1) + "\n" +
+                               "Upgrade Cost: " + GameController.instance.pathLevels[pathController.pathLevel].upgradeCost + "\n" +
                                "Click to upgrade and increase speed of travellers";
     }
 
