@@ -57,10 +57,7 @@ public class GateController : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (outboundTravellerQueue.Count > 0)
-        {
-            ProcessOutboundTraveller();
-        }
+        UpgradeGate();
     }
 
     private void OnMouseEnter()
@@ -77,7 +74,6 @@ public class GateController : MonoBehaviour
         spriteRenderer.color = new Color(spriteRenderer.color.r,
             spriteRenderer.color.g, spriteRenderer.color.b, 1f);
         UIController.instance.hideTooltip();
-
     }
 
     public void ProcessOutboundTraveller()

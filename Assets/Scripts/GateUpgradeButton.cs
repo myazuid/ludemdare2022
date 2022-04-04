@@ -22,7 +22,10 @@ public class GateUpgradeButton : MonoBehaviour
 
     private void OnMouseDown()
     {
-        gateController.ProcessOutboundTraveller();
+        if (gateController.outboundTravellerQueue.Count > 0)
+        {
+            gateController.ProcessOutboundTraveller();
+        }
     }
 
     private void OnMouseEnter()
@@ -30,7 +33,7 @@ public class GateUpgradeButton : MonoBehaviour
         spriteRenderer.color = new Color(spriteRenderer.color.r,
             spriteRenderer.color.g, spriteRenderer.color.b, 0.5f);
 
-        UIController.instance.showTooltip(gateController);
+        //UIController.instance.showTooltip(gateController);
     }
 
     private void OnMouseExit()
@@ -38,6 +41,6 @@ public class GateUpgradeButton : MonoBehaviour
         spriteRenderer.color = new Color(spriteRenderer.color.r,
             spriteRenderer.color.g, spriteRenderer.color.b, 1f);
 
-        UIController.instance.hideTooltip();
+        //UIController.instance.hideTooltip();
     }
 }
