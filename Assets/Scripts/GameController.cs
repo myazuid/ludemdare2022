@@ -16,6 +16,8 @@ public class GameController : MonoBehaviour
     private GameObject travellerPrefab;
     [SerializeField] 
     private GameObject gatesParent;
+
+    public GameObject deactivatedGatePrefab;
     [SerializeField] 
     private int fareCost;
 
@@ -27,7 +29,7 @@ public class GameController : MonoBehaviour
     private float _increaseDifficultyFrequencyInSeconds;
     private float _timeSinceLastSpawn;
     public float _approvalRating;
-    private float _approvalRatingChangeSmall, _approvalRatingChangeBig;
+    private float _approvalRatingChangeSmall, _approvalRatingChangeBig, _approvalRatingRageExit;
     [NonSerialized]
     public int _currentBalance;
 
@@ -54,6 +56,16 @@ public class GameController : MonoBehaviour
         {
             Destroy(this);
         }
+
+        for (int i = 0; i < gatesParent.transform.childCount; i++)
+        {
+            if (!gatesParent.transform.GetChild(i).gameObject.activeSelf)
+            {
+                GameObject go = Instantiate(deactivatedGatePrefab, gatesParent.transform.GetChild(i).position, Quaternion.identity);
+                gatesParent.transform.GetChild(i).GetComponent<GateController>().deactivatedGate = go;
+            }
+
+        }
     }
 
     private void OnEnable()
@@ -69,8 +81,9 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         _travellers = new List<GameObject>();
-        _approvalRating = 10f;
-        _approvalRatingChangeSmall = 0.5f;  // used to be 0.1f
+        _approvalRating = 5f;
+        _approvalRatingChangeSmall = 0.1f;  // used to be 0.1f
+        _approvalRatingRageExit = 1f;
         _approvalRatingChangeBig = 0.5f;
         _travellerSpawnRateInSeconds = 0.5f;
         _increaseDifficultyFrequencyInSeconds = 30f;
@@ -91,6 +104,7 @@ public class GameController : MonoBehaviour
                 if (!gatesParent.transform.GetChild(i).gameObject.activeSelf)
                 {
                     gatesParent.transform.GetChild(i).gameObject.SetActive(true);
+                    gatesParent.transform.GetChild(i).gameObject.GetComponent<GateController>().deactivatedGate.SetActive(false);
                     break;
                 }
             }
@@ -185,7 +199,7 @@ public class GameController : MonoBehaviour
         }
         
         _approvalRating = Mathf.Round(_approvalRating * 10f) / 10f;
-        onApprovalChanged.Invoke(_approvalRating);
+        onApprovalChanged?.Invoke(_approvalRating);
     }
 
     private void LowerApprovalRating(bool bigApprovalRatingLoss)
@@ -194,10 +208,10 @@ public class GameController : MonoBehaviour
         {
             _approvalRating -= _approvalRatingChangeBig * 2;
         }
-        else _approvalRating -= _approvalRatingChangeSmall * 2;
+        else _approvalRating -= _approvalRatingRageExit;
         
         _approvalRating = Mathf.Round(_approvalRating * 10f) / 10f;
-        onApprovalChanged.Invoke(_approvalRating);
+        onApprovalChanged?.Invoke(_approvalRating);
         
         if (_approvalRating <= 0f)
         {

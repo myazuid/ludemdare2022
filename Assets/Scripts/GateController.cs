@@ -15,16 +15,13 @@ public class GateController : MonoBehaviour
 
     [SerializeField] private GameObject beamEffect;
 
-    [HideInInspector]
-    public int gateLevel = 0;
+    [HideInInspector] public int gateLevel = 0;
     private float timeOfNextGateProcessing = 0;
     private float gateProcessingFrequency = 1;
+
     public int MaxGateLevel
     {
-        get
-        {
-            return GameController.instance.gateLevels.Count - 1;
-        }
+        get { return GameController.instance.gateLevels.Count - 1; }
     }
 
     [SerializeField] private TextMeshProUGUI gateNameText;
@@ -35,10 +32,18 @@ public class GateController : MonoBehaviour
 
     public GameObject beamPrefab;
 
+    [NonSerialized]
+    public GameObject deactivatedGate;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        if (deactivatedGate)
+        {
+            Destroy(deactivatedGate);
+        }
+
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         gateNameText.text = GateSpawner.instance.ReturnUnusedWorldName();
@@ -71,14 +76,21 @@ public class GateController : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        spriteRenderer.color = new Color(spriteRenderer.color.r,
-            spriteRenderer.color.g, spriteRenderer.color.b, 0.5f);
+        if (gateLevel != MaxGateLevel)
+        {
+            spriteRenderer.color = new Color(spriteRenderer.color.r,
+                spriteRenderer.color.g, spriteRenderer.color.b, 0.5f);
+        }
+        else
+        {
+            spriteRenderer.color = new Color(spriteRenderer.color.r,
+                spriteRenderer.color.g, spriteRenderer.color.b, 1f);
+        }
 
         if (UIController.instance)
         {
             UIController.instance.showTooltip(this);
         }
-
     }
 
     private void OnMouseExit()
@@ -94,7 +106,7 @@ public class GateController : MonoBehaviour
         {
             return;
         }
-        
+
         var processedTraveller = outboundTravellerQueue[0];
 
         outboundTravellerQueue.RemoveAt(0);
@@ -131,7 +143,7 @@ public class GateController : MonoBehaviour
         if (gateLevel < MaxGateLevel)
         {
             var success = GameController.instance.SpendFromBalance(
-            GameController.instance.gateLevels[gateLevel].upgradeCost);
+                GameController.instance.gateLevels[gateLevel].upgradeCost);
             if (success)
             {
                 gateLevel++;
@@ -139,7 +151,7 @@ public class GateController : MonoBehaviour
                 spriteRenderer.sprite = GameController.instance.gateLevels[gateLevel].sprite;
                 Instantiate(beamPrefab, transform.position, Quaternion.identity);
             }
-        }   
+        }
     }
 
     public Vector2 FindNextAvailableQueuePosition()
@@ -172,6 +184,7 @@ public class GateController : MonoBehaviour
                 {
                     gap = gapBetweenQueuingTravellers;
                 }
+
                 positionRoundCircle = circumference - (gap * placeInThisCircle);
 
                 if (positionRoundCircle < 0)
@@ -196,6 +209,7 @@ public class GateController : MonoBehaviour
         {
             spawnDir += (spawnDir.normalized * gapBetweenQueuingCircles * circleNumber);
         }
+
         var spawnPos = (Vector2)transform.position + spawnDir;
 
         return (spawnPos);
@@ -232,6 +246,7 @@ public class GateController : MonoBehaviour
                 {
                     gap = gapBetweenQueuingTravellers;
                 }
+
                 positionRoundCircle = circumference - (gap * placeInThisCircle);
 
                 if (positionRoundCircle < 0)
@@ -256,6 +271,7 @@ public class GateController : MonoBehaviour
         {
             spawnDir += (spawnDir.normalized * gapBetweenQueuingCircles * circleNumber);
         }
+
         var spawnPos = (Vector2)transform.position + spawnDir;
 
         return (spawnPos);
