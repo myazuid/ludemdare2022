@@ -10,16 +10,18 @@ public class UIController : MonoBehaviour
 {
     [SerializeField] private GameObject[] reviewPanels;
     [SerializeField] private GameObject tutorialContainer;
+    [SerializeField] private Sprite[] bossSpriteSources;
+    [SerializeField] private Image tutorialBossSprite;
     [SerializeField] private Text tutorialTitleText, tutorialBodyText;
-    [SerializeField] private float tutorialNotificationDurationInSeconds;
+    [SerializeField] private float tutorialNotificationDurationInSeconds = 8f;
+    [SerializeField] private float timeSpentInTutorial;
 
     private bool _negativeReviewTutorial,
         _firstAngryAlienTutorial,
-        _firstPathTutorial,
-        _firstUpgradeTutorial,
-        _firstTravellerSpawnTutorial,
-        _firstGateArrivalTutorial,
-        _gameStartTutorial;
+        _firstPathTutorial;
+
+    private bool _gameStartTutorial, _firstTravellerSpawnTutorial;
+    public bool _firstGateArrivalTutorial, _firstUpgradeTutorial;
 
     public Text balanceChanged;
     public Text totalProcessed;
@@ -66,8 +68,78 @@ public class UIController : MonoBehaviour
 
     private void ShowTutorial(UIController uiController)
     {
-        tutorialNotificationDurationInSeconds = 0f;
-        
+        if (!_gameStartTutorial)
+        {
+            tutorialContainer.SetActive(true);
+            tutorialBossSprite.sprite = bossSpriteSources[0];
+            tutorialTitleText.text = "Welcome!";
+            tutorialBodyText.text = "Welcome to the Stonehenge galactic transport hub team, " +
+                                    "new hire.\n\nNone of your predecessors lasted more than a " +
+                                    "day but we are sure you will do a great job! Just keep the " +
+                                    "passengers happy by sending them on their way without delay. " +
+                                    "It’s a pretty simple job really. I don’t know why the previous " +
+                                    "hires couldn’t handle it! We are sure you will do great. " +
+                                    "If not, we will know.";
+            ChangeTimescale();
+            _gameStartTutorial = true;
+        }
+        else
+        {
+            tutorialContainer.SetActive(true);
+            tutorialBossSprite.sprite = bossSpriteSources[0];
+            tutorialTitleText.text = "Your first traveller.";
+            tutorialBodyText.text = "Here is your first passenger! Isn’t he cute? He looks very happy too! " +
+                                    "Make sure to keep him that way!! Let’s see where he plans to go…";
+            ChangeTimescale();
+        }
+    }
+    
+    public void ShowAngryTutorial(GameController gameController)
+    {
+        tutorialContainer.SetActive(true);
+        tutorialBossSprite.sprite = bossSpriteSources[2];
+        tutorialTitleText.text = "Angry Customer!";
+        tutorialBodyText.text = "That poor passenger has been waiting too long and is now angry with you! " +
+                                "Frankly, i feel the same way. " +
+                                "Send them on their way before they leave " +
+                                "and write a negative review against our company.";
+        ChangeTimescale();
+    }
+    
+    public void ShowTutorial(GameController gameController)
+    {
+        tutorialContainer.SetActive(true);
+        tutorialBossSprite.sprite = bossSpriteSources[2];
+        tutorialTitleText.text = "ONE JOB!";
+        tutorialBodyText.text = "I gave you one job to do and you failed. " +
+                                "An angry passenger just left a negative review " +
+                                "and forever tarnished the great name of this company. " +
+                                "If your approval rating drops below 0 you will be fired!";
+        ChangeTimescale();
+    }
+    
+    public void ShowTutorial(GateController gateController)
+    {
+        tutorialContainer.SetActive(true);
+        tutorialBossSprite.sprite = bossSpriteSources[1];
+        tutorialTitleText.text = "Send The Passenger On His Way.";
+        tutorialBodyText.text = "Looks like he is queued up at the gate. " +
+                                "He needs your help getting through the security check. " +
+                                "Click on the button beside the gate to send him through. " +
+                                "And be quick about it, he has an important job to do " +
+                                "and he is waiting on you to DO.. YOUR.. JOB!!";
+        ChangeTimescale();
+    }
+    
+    public void ShowGateUpgradeTutorial(GateController gateController)
+    {
+        tutorialContainer.SetActive(true);
+        tutorialBossSprite.sprite = bossSpriteSources[1];
+        tutorialTitleText.text = "Automatically Processing Travellers.";
+        tutorialBodyText.text = "If you had read the manual it clearly specifies " +
+                                "that you can upgrade gates to automatically send passengers through. " +
+                                "Try it now.";
+        ChangeTimescale();
     }
 
     private void ONTotalProcessedChanged(int obj)
@@ -195,6 +267,11 @@ public class UIController : MonoBehaviour
         tooltipContainer.SetActive(false);
     }
 
+    public void HideTutorial()
+    {
+        tutorialContainer.SetActive(false);
+    }
+
     public void showDefeatScreen()
     {
         if (defeatContainer != null)
@@ -210,25 +287,35 @@ public class UIController : MonoBehaviour
         reviewPanelToShow.SetActive(false);
     }
 
-    private void ResetTimescale()
+    private void ChangeTimescale()
     {
-        if (Time.timeScale == 0)
+        Time.timeScale = Time.timeScale == 0 ? 1f : 0f;
+
+        if (_gameStartTutorial && !_firstTravellerSpawnTutorial)
         {
-            Time.timeScale = 1f;
+            _firstTravellerSpawnTutorial = true;
+            StartCoroutine(FirstTravellerSpawned());
         }
-        else Time.timeScale = 0f;
+    }
+
+    IEnumerator FirstTravellerSpawned()
+    {
+        yield return new WaitForSeconds(1f);
+        ShowTutorial(this);
     }
 
     private void Update()
     {
         if (Time.timeScale == 0)
         {
-            tutorialNotificationDurationInSeconds += Time.deltaTime;
+            timeSpentInTutorial += Time.unscaledDeltaTime;
         }
 
-        if (tutorialNotificationDurationInSeconds >= 8f)
+        if (timeSpentInTutorial >= tutorialNotificationDurationInSeconds)
         {
-            ResetTimescale();
+            HideTutorial();
+            ChangeTimescale();
+            timeSpentInTutorial = 0f;
         }
     }
 }

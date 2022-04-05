@@ -65,6 +65,15 @@ public class GateController : MonoBehaviour
                 timeOfNextGateProcessing = Time.time + gateProcessingFrequency;
             }
         }
+
+        if (GameController.instance.gateLevels[gateLevel].upgradeCost <= GameController.instance._currentBalance)
+        {
+            if (UIController.instance._firstUpgradeTutorial == false)
+            {
+                UIController.instance._firstUpgradeTutorial = true;
+                UIController.instance.ShowGateUpgradeTutorial(this);
+            }
+        }
     }
 
     private void OnMouseDown()
@@ -212,6 +221,11 @@ public class GateController : MonoBehaviour
 
         var spawnPos = (Vector2)transform.position + spawnDir;
 
+        if (UIController.instance._firstGateArrivalTutorial == false)
+        {
+            UIController.instance._firstGateArrivalTutorial = true;
+            UIController.instance.ShowTutorial(this);
+        }
         return (spawnPos);
     }
 
