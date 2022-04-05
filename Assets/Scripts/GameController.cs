@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour
     private bool _angryCustomerTutorialPlayed = false;
     private float _travellerSpawnRateInSeconds;
     private float _increaseDifficultyFrequencyInSeconds;
-    private float _timeSinceLastSpawn;
+    private float _timeSinceLastSpawn = 5;
     public float _approvalRating;
     private float _approvalRatingChangeSmall, _approvalRatingChangeBig, _approvalRatingRageExit;
     [NonSerialized]
