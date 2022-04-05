@@ -46,6 +46,15 @@ public class PathController : MonoBehaviour
             spriteShapeRenderer.color.g, spriteShapeRenderer.color.b, 0.5f);
         
         UIController.instance.showTooltip(this);
+
+        if (!UIController.instance._firstPathTutorial)
+        {
+            if (UIController.instance._upgradedGatesOnce)
+            {
+                UIController.instance._firstPathTutorial = true;
+                UIController.instance.ShowTutorial(this);
+            }
+        }
     }
 
     private void OnMouseExit()

@@ -159,6 +159,10 @@ public class GateController : MonoBehaviour
                 //spriteRenderer.sprite = gateSprites[Mathf.Min(gateLevel, gateSprites.Length - 1)];
                 spriteRenderer.sprite = GameController.instance.gateLevels[gateLevel].sprite;
                 Instantiate(beamPrefab, transform.position, Quaternion.identity);
+                if (UIController.instance._upgradedGatesOnce == false)
+                {
+                    UIController.instance._upgradedGatesOnce = true;
+                }
             }
         }
     }

@@ -16,12 +16,8 @@ public class UIController : MonoBehaviour
     [SerializeField] private float tutorialNotificationDurationInSeconds = 8f;
     [SerializeField] private float timeSpentInTutorial;
 
-    private bool _negativeReviewTutorial,
-        _firstAngryAlienTutorial,
-        _firstPathTutorial;
-
-    private bool _gameStartTutorial, _firstTravellerSpawnTutorial;
-    public bool _firstGateArrivalTutorial, _firstUpgradeTutorial;
+    private bool _gameStartTutorial, _firstTravellerSpawnTutorial, _negativeReviewTutorial, _firstAngryAlienTutorial;
+    public bool _firstGateArrivalTutorial, _firstUpgradeTutorial, _firstPathTutorial, _upgradedGatesOnce;
 
     public Text balanceChanged;
     public Text totalProcessed;
@@ -73,13 +69,10 @@ public class UIController : MonoBehaviour
             tutorialContainer.SetActive(true);
             tutorialBossSprite.sprite = bossSpriteSources[0];
             tutorialTitleText.text = "Welcome!";
-            tutorialBodyText.text = "Welcome to the Stonehenge galactic transport hub team, " +
-                                    "new hire.\n\nNone of your predecessors lasted more than a " +
-                                    "day but we are sure you will do a great job! Just keep the " +
-                                    "passengers happy by sending them on their way without delay. " +
-                                    "It’s a pretty simple job really. I don’t know why the previous " +
-                                    "hires couldn’t handle it! We are sure you will do great. " +
-                                    "If not, we will know.";
+            tutorialBodyText.text = "Welcome to the Stonehenge galactic transport hub team, new hire." +
+                                    "\n\nIt’s a pretty simple job really. " +
+                                    "I don’t know why the previous hires couldn’t handle it! " +
+                                    "We are sure you will do great. If not, we will know.";
             ChangeTimescale();
             _gameStartTutorial = true;
         }
@@ -139,6 +132,18 @@ public class UIController : MonoBehaviour
         tutorialBodyText.text = "If you had read the manual it clearly specifies " +
                                 "that you can upgrade gates to automatically send passengers through. " +
                                 "Try it now.";
+        ChangeTimescale();
+    }
+    
+    public void ShowTutorial(PathController pathController)
+    {
+        tutorialContainer.SetActive(true);
+        tutorialBossSprite.sprite = bossSpriteSources[2];
+        tutorialTitleText.text = "Move Faster!";
+        tutorialBodyText.text = "Have you not noticed how slowly these passengers are moving? " +
+                                "It’s because you haven’t created any paths for them! What are you thinking? " +
+                                "You should really be building and upgrading paths so that they can move faster. " +
+                                "Do your job so they can get to theirs.";
         ChangeTimescale();
     }
 
@@ -300,7 +305,7 @@ public class UIController : MonoBehaviour
 
     IEnumerator FirstTravellerSpawned()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2.5f);
         ShowTutorial(this);
     }
 
