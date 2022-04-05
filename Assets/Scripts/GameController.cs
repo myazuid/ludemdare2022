@@ -25,6 +25,9 @@ public class GameController : MonoBehaviour
     public List<PathLevel> pathLevels = new List<PathLevel>();
     public List<GateLevel> gateLevels = new List<GateLevel>();
 
+    private bool _firstNegativeReview = false;
+    private bool _firstAngryCustomer = false;
+    private bool _angryCustomerTutorialPlayed = false;
     private float _travellerSpawnRateInSeconds;
     private float _increaseDifficultyFrequencyInSeconds;
     private float _timeSinceLastSpawn;
@@ -142,6 +145,12 @@ public class GameController : MonoBehaviour
             surgeCount++;
             surgeDelay = Random.Range(7f, 20f);
         }
+
+        if (_firstAngryCustomer && !_angryCustomerTutorialPlayed)
+        {
+            _angryCustomerTutorialPlayed = true;
+            UIController.instance.ShowAngryTutorial(this);
+        }
     }
     
     IEnumerator SurgeTraveller(int start, int end, int count)
@@ -224,7 +233,15 @@ public class GameController : MonoBehaviour
             _totalProcessed++;
             onTotalProcessedChanged.Invoke(_totalProcessed);
         }
-        else LowerApprovalRating(false);
+        else
+        {
+            LowerApprovalRating(false);
+            if (!_firstNegativeReview)
+            {
+                _firstNegativeReview = true;
+                UIController.instance.ShowTutorial(this);
+            }
+        }
     }
 
     
