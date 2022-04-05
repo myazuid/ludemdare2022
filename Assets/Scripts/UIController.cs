@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -307,6 +308,12 @@ public class UIController : MonoBehaviour
     {
         yield return new WaitForSeconds(2.5f);
         ShowTutorial(this);
+    }
+
+    public void loadMenu()
+    {
+        SceneManager.LoadScene("Menu");
+        Time.timeScale = 1;
     }
 
     private void Update()
