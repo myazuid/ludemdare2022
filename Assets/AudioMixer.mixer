@@ -19,7 +19,7 @@ AudioMixerController:
   - guid: 43c0167494803bf4ba6ccb7651bbf3a1
     name: Volume
   - guid: 1c86db102109fae49a35a1d695efa7a6
-    name: Volume
+    name: VolumeMusic
   m_AudioMixerGroupViews:
   - guids:
     - 0deb2ba43ea341c4fa95b38395435745
@@ -72,7 +72,8 @@ AudioMixerSnapshotController:
   m_Name: Snapshot
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 96a3248088ba88b46a73a747184b3914
-  m_FloatValues: {}
+  m_FloatValues:
+    1c86db102109fae49a35a1d695efa7a6: 0
   m_TransitionOverrides: {}
 --- !u!243 &615964068738402092
 AudioMixerGroupController:
