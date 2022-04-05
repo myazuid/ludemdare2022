@@ -102,7 +102,7 @@ public class GameController : MonoBehaviour
 
         if (timeTillNextGate <= 0)
         {
-            timeTillNextGate = 45;
+            timeTillNextGate = 55;
             for (int i = 0; i < gatesParent.transform.childCount; i++)
             {
                 if (!gatesParent.transform.GetChild(i).gameObject.activeSelf)
@@ -139,7 +139,7 @@ public class GameController : MonoBehaviour
             int spawnAmount = Random.Range(3 + surgeCount / 2, 3 + surgeCount);
             spawnAmount = Mathf.Min(spawnAmount, 20);
             StartCoroutine(SurgeTraveller(startGate, endGate, spawnAmount));
-            surgeCount+=2;
+            surgeCount++;
             surgeDelay = Random.Range(7f, 20f);
         }
     }
