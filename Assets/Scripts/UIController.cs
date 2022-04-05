@@ -118,7 +118,7 @@ public class UIController : MonoBehaviour
         tutorialTitleText.text = "Send The Passenger On His Way.";
         tutorialBodyText.text = "Looks like he is queued up at the gate. " +
                                 "He needs your help getting through the security check. " +
-                                "Click on the button beside the gate to send him through. " +
+                                "Click on the button above the gate to send him through. " +
                                 "And be quick about it, he has an important job to do " +
                                 "and he is waiting on you to DO.. YOUR.. JOB!!";
         ChangeTimescale();
